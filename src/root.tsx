@@ -49,21 +49,64 @@ export default function Root() {
                     "/tables/basic/index"
                   )} mx-1.5 sm:mx-6`}
                 >
-                  <A href="/tables/basic/App">TableBasic 02</A>
+                  <A href="/tables/basic/App">TableBasic02</A>
                 </li>
                 <li
                   class={`border-b-2 ${active(
                     "/tables/basic/tableBasicRoot"
                   )} mx-1.5 sm:mx-6`}
                 >
-                  <A href="/tables/basic/tableBasicRoot">TableBasic 03</A>
+                  <A href="/tables/basic/tableBasicRoot">TableBasic03</A>
+                </li>
+                <li
+                  class={`border-b-2 ${active(
+                    "/tables/column-groups/rootColumnGroup01"
+                  )} mx-1.5 sm:mx-6`}
+                >
+                  <A href="/tables/column-groups/rootColumnGroup01">
+                    ColumnGroup01
+                  </A>
+                </li>
+                <li
+                  class={`border-b-2 ${active(
+                    "/tables/column-groups/rootColumnGroup02"
+                  )} mx-1.5 sm:mx-6`}
+                >
+                  <A href="/tables/column-groups/rootColumnGroup02">
+                    ColumnGroup02
+                  </A>
                 </li>
                 <li
                   class={`border-b-2 ${active(
                     "/tableBasicRoot"
                   )} mx-1.5 sm:mx-6`}
                 >
-                  <A href="/tableBasicRoot">TableBasic 04</A>
+                  <A href="/tableBasicRoot">TableBasic04</A>
+                </li>
+                <li
+                  class={`border-b-2 ${active(
+                    "/tables/column-ordering/columnOrdering01"
+                  )} mx-1.5 sm:mx-6`}
+                >
+                  <A href="/tables/column-ordering/columnOrdering01">
+                    ColumnOrdering01
+                  </A>
+                </li>
+                <li
+                  class={`border-b-2 ${active(
+                    "/tables/column-visibility/visibility01"
+                  )} mx-1.5 sm:mx-6`}
+                >
+                  <A href="/tables/column-visibility/visibility01">
+                    Visbility01
+                  </A>
+                </li>
+                <li
+                  class={`border-b-2 ${active(
+                    "/tables/sorting/sorting01"
+                  )} mx-1.5 sm:mx-6`}
+                >
+                  <A href="/tables/sorting/sorting01">Sorting01</A>
                 </li>
               </ul>
             </nav>

@@ -8,41 +8,403 @@ import { createSignal, For } from "solid-js";
 // import { render } from "solid-js/web";
 // import html from "solid-js/html";
 
-type Person = {
-  firstName: string;
-  lastName: string;
-  age: number;
-  visits: number;
-  status: string;
-  progress: number;
-};
+import { defaultData, Person } from "../../data/people";
 
-const defaultData: Person[] = [
-  {
-    firstName: "tanner",
-    lastName: "linsley",
-    age: 24,
-    visits: 100,
-    status: "In Relationship",
-    progress: 50,
-  },
-  {
-    firstName: "tandy",
-    lastName: "miller",
-    age: 40,
-    visits: 40,
-    status: "Single",
-    progress: 80,
-  },
-  {
-    firstName: "joe",
-    lastName: "dirte",
-    age: 45,
-    visits: 20,
-    status: "Complicated",
-    progress: 10,
-  },
-];
+// type Person = {
+//   firstName: string;
+//   lastName: string;
+//   age: number;
+//   visits: number;
+//   status: string;
+//   progress: number;
+// };
+
+// const defaultData: Person[] = [
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+//   {
+//     firstName: "tanner",
+//     lastName: "linsley",
+//     age: 24,
+//     visits: 100,
+//     status: "In Relationship",
+//     progress: 50,
+//   },
+//   {
+//     firstName: "tandy",
+//     lastName: "miller",
+//     age: 40,
+//     visits: 40,
+//     status: "Single",
+//     progress: 80,
+//   },
+//   {
+//     firstName: "joe",
+//     lastName: "dirte",
+//     age: 45,
+//     visits: 20,
+//     status: "Complicated",
+//     progress: 10,
+//   },
+// ];
 
 const defaultColumns: ColumnDef<Person>[] = [
   {
@@ -93,9 +455,9 @@ function App() {
   });
 
   return (
-    <div class="p-2 bg-red-200">
-      <table class="bg-red-300">
-        <thead class="p-4">
+    <div class="p-4 bg-red-200">
+      <table class="bg-red-300 h-96">
+        <thead class="p-4 h-50">
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (
               <tr>
@@ -115,13 +477,13 @@ function App() {
             )}
           </For>
         </thead>
-        <tbody class="p-4">
+        <tbody class="p-4 h-12 bg-red-400">
           <For each={table.getRowModel().rows}>
             {(row) => (
-              <tr>
+              <tr class="bg-red-400">
                 <For each={row.getVisibleCells()}>
                   {(cell) => (
-                    <td class="px-10">
+                    <td class="px-10 bg-red-400">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -134,7 +496,7 @@ function App() {
           </For>
         </tbody>
         <tfoot>
-          <For each={table.getFooterGroups()}>
+          {/* <For each={table.getFooterGroups()}>
             {(footerGroup) => (
               <tr>
                 <For each={footerGroup.headers}>
@@ -151,7 +513,7 @@ function App() {
                 </For>
               </tr>
             )}
-          </For>
+          </For> */}
         </tfoot>
       </table>
       <div class="h-4" />
