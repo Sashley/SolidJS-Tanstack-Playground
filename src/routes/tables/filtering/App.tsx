@@ -1,62 +1,69 @@
-import { createSignal, For, Show } from 'solid-js';
-import './App.css';
-import { makeData, Person } from './make-data';
+import { createSignal, For, Show } from "solid-js";
+import "./App.css";
+import { makeData, Person } from "./makeData";
 import {
   Column,
+  ColumnDef,
   ColumnFiltersState,
   createTable,
-  createTableInstance,
-  TableInstance,
-  getCoreRowModelSync,
-  getColumnFilteredRowModelSync,
-  getGlobalFilteredRowModelSync,
+  flexRender,
+  getCoreRowModel,
   getPaginationRowModel,
-} from '@tanstack/solid-table';
+  createSolidTable,
+} from "@tanstack/solid-table";
 
-const table = createTable().setRowType<Person>();
+import { } from '@tanstack/table-core';
 
-const columns = table.createColumns([
+// const table = createSolidTable({
+//   get data() { return this.data() },
+
+// }
+
+// );
+
+
+const columns: ColumnDef<Person>[] = [
   table.createGroup({
-    header: 'Name',
-    footer: props => props.column.id,
+    header: "Name",
+    footer: (props) => props.column.id,
     columns: [
-      table.createDataColumn('firstName', {
-        cell: info => info.value,
-        footer: props => props.column.id,
-        filterType: 'auto',
+      table.createDataColumn("firstName", {
+        cell: (info) => info.value,
+        footer: (props) => props.column.id,
+        filterType: "auto",
       }),
-      table.createDataColumn(row => row.lastName, {
-        id: 'lastName',
-        cell: info => info.value,
+      table.createDataColumn((row) => row.lastName, {
+        id: "lastName",
+        cell: (info) => info.value,
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
-        filterType: 'auto',
+        footer: (props) => props.column.id,
+        filterType: "auto",
       }),
     ],
   }),
   table.createGroup({
-    header: 'Info',
-    footer: props => props.column.id,
+    header: "Info",
+    footer: (props) => props.column.id,
     columns: [
-      table.createDataColumn('age', {
-        header: () => 'Age',
-        footer: props => props.column.id,
-        filterType: 'auto',
+      table.createDataColumn("age", {
+        header: () => "Age",
+        footer: (props) => props.column.id,
+        filterType: "auto",
       }),
       table.createGroup({
-        header: 'More Info',
+        header: "More Info",
         columns: [
-          table.createDataColumn('visits', {
+          table.createDataColumn("visits", {
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
-          table.createDataColumn('status', {
-            header: 'Status',
-            footer: props => props.column.id,
+          table.createDataColumn("status", {
+            header: "Status",
+            footer: (props) => props.column.id,
           }),
-          table.createDataColumn('progress', {
-            header: 'Profile Progress',
-            footer: props => props.column.id,
+          table.createDataColumn("progress", {
+            header: "Profile Progress",
+            footer: (props) => props.column.id,
           }),
         ],
       }),
@@ -72,12 +79,12 @@ function Filter(props: { column: Column<any>; instance: TableInstance<any> }) {
 
   return (
     <Show
-      when={typeof firstValue() === 'number'}
+      when={typeof firstValue() === "number"}
       fallback={
         <input
           type="text"
-          value={(props.column.getColumnFilterValue() ?? '') as string}
-          onInput={e => {
+          value={(props.column.getColumnFilterValue() ?? "") as string}
+          onInput={(e) => {
             props.column.setColumnFilterValue(e.currentTarget.value);
           }}
           placeholder={`Search... (${
@@ -94,9 +101,9 @@ function Filter(props: { column: Column<any>; instance: TableInstance<any> }) {
           max={Number(props.column.getPreFilteredMinMaxValues()[1])}
           value={
             ((props.column.getColumnFilterValue() as string[])?.[0] ??
-              '') as string
+              "") as string
           }
-          onInput={e =>
+          onInput={(e) =>
             props.column.setColumnFilterValue((old: string) => [
               e.currentTarget.value,
               old?.[1],
@@ -111,9 +118,9 @@ function Filter(props: { column: Column<any>; instance: TableInstance<any> }) {
           max={Number(props.column.getPreFilteredMinMaxValues()[1])}
           value={
             ((props.column.getColumnFilterValue() as string[])?.[1] ??
-              '') as string
+              "") as string
           }
-          onInput={e =>
+          onInput={(e) =>
             props.column.setColumnFilterValue((old: string) => [
               old?.[0],
               e.currentTarget.value,
@@ -128,13 +135,14 @@ function Filter(props: { column: Column<any>; instance: TableInstance<any> }) {
 }
 
 function App() {
-  const data = makeData(10);
+  const [data, setData] = createSignal(makeData(1000));
   const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>(
     []
   );
-  const [globalFilter, setGlobalFilter] = createSignal('');
-  const instance = createTableInstance(table, {
-    data,
+  const [globalFilter, setGlobalFilter] = createSignal("");
+
+  const table = createSolidTable({
+    get data() {return data()},
     columns,
     state: {
       get columnFilters() {
@@ -146,7 +154,7 @@ function App() {
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    getCoreRowModel: getCoreRowModelSync(),
+    getCoreRowModel: getCoreRowModel(),
     getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
     getGlobalFilteredRowModel: getGlobalFilteredRowModelSync(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -156,18 +164,18 @@ function App() {
     <div class="table">
       <div>
         <input
-          value={globalFilter() ?? ''}
-          onInput={e => setGlobalFilter(e.currentTarget.value)}
+          value={globalFilter() ?? ""}
+          onInput={(e) => setGlobalFilter(e.currentTarget.value)}
           placeholder="Search all columns..."
         />
       </div>
       <table {...instance.getTableProps()}>
         <thead>
           <For each={instance.getHeaderGroups()}>
-            {headerGroup => (
+            {(headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 <For each={headerGroup.headers}>
-                  {header => (
+                  {(header) => (
                     <th {...header.getHeaderProps()}>
                       <Show when={!header.isPlaceholder} fallback={null}>
                         {header.renderHeader()}
@@ -189,10 +197,10 @@ function App() {
         </thead>
         <tbody {...instance.getTableBodyProps()}>
           <For each={instance.getRowModel().rows}>
-            {row => (
+            {(row) => (
               <tr {...row.getRowProps()}>
                 <For each={row.getVisibleCells()}>
-                  {cell => (
+                  {(cell) => (
                     <td {...cell.getCellProps()}>{cell.renderCell()}</td>
                   )}
                 </For>
