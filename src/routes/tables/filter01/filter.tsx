@@ -232,15 +232,6 @@ function App() {
     }
   }, [table.getState().columnFilters[0]?.id]);
 
-  // const facetedValues = column.column._getFacetedMinMaxValues?.();
-
-  // let classValue: string | undefined = '';
-  // if (Array.isArray(facetedValues)) {
-  //     classValue = facetedValues.join(' - ');
-  // } else if (facetedValues !== undefined) {
-  //     classValue = facetedValues.toString();
-  // }
-
   function getClassValue(column: any): string | undefined {
     const facetedValues = column.column._getFacetedMinMaxValues?.();
 
@@ -274,15 +265,12 @@ function App() {
                       // {...column.getHeaderProps()}
                       colSpan={column.colSpan}
                     >
+                      {flexRender(
+                        column.column.columnDef.header,
+                        column.getContext()
+                      )}
                       <Show when={!column.isPlaceholder}>
-                        <div
-                        // class={
-                        //   Array.isArray(column.column._getFacetedMinMaxValues?.())
-                        //   ? column.column._getFacetedMinMaxValues?.()?.join(' - ')
-                        //   : column.column._getFacetedMinMaxValues?.() ?? ''
-                        // }
-                        >
-                          {/* <div class={classValue}></div> */}
+                        <div>
                           <div class={getClassValue(column)}></div>
                         </div>
                       </Show>
@@ -292,7 +280,7 @@ function App() {
                 </For>
               </tr>
             )}
-            {table.getHeaderGroups().map((headerGroup) => (
+            {/* {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} colSpan={header.colSpan}>
@@ -305,11 +293,11 @@ function App() {
                   </th>
                 ))}
               </tr>
-            ))}
+            ))} */}
           </For>
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => (
+          {/* {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>
@@ -317,10 +305,26 @@ function App() {
                 </td>
               ))}
             </tr>
-          ))}
+          ))} */}
+          <For each={table.getRowModel().rows}>
+            {(row) => (
+              <tr>
+                <For each={row.getVisibleCells()}>
+                  {(cell) => (
+                    <td>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )}
+                </For>
+              </tr>
+            )}
+          </For>
         </tbody>
         <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
+          {/* {table.getFooterGroups().map((footerGroup) => (
             <tr key={footerGroup.id}>
               {footerGroup.headers.map((header) => (
                 <th key={header.id} colSpan={header.colSpan}>
@@ -333,7 +337,25 @@ function App() {
                 </th>
               ))}
             </tr>
-          ))}
+          ))} */}
+          <For each={table.getFooterGroups()}>
+            {(footerGroup) => (
+              <tr>
+                <For each={footerGroup.headers}>
+                  {(header) => (
+                    <th colSpan={header.colSpan}>
+                      <Show when={!header.isPlaceholder}>
+                        {flexRender(
+                          header.column.columnDef.footer,
+                          header.getContext()
+                        )}
+                      </Show>
+                    </th>
+                  )}
+                </For>
+              </tr>
+            )}
+          </For>
         </tfoot>
       </table>
       <div class="h-2" />
@@ -377,7 +399,7 @@ function App() {
           | Go to page:
           <input
             type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
+            value={table.getState().pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0;
               table.setPageIndex(page);
@@ -392,9 +414,7 @@ function App() {
           }}
         >
           {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
+            <option value={pageSize}>Show {pageSize}</option>
           ))}
         </select>
       </div>
@@ -443,7 +463,7 @@ function Filter({
               ? `(${column.getFacetedMinMaxValues()?.[0]})`
               : ""
           }`}
-          className="w-24 border shadow rounded"
+          class="w-24 border shadow rounded"
         />
         <DebouncedInput
           type="number"
@@ -466,30 +486,23 @@ function Filter({
   ) : (
     <>
       <datalist id={column.id + "list"}>
-        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={value} key={value} />
-        ))}
+        {Array.from(sortedUniqueValues())
+          .slice(0, 5000)
+          .map((value: any) => (
+            <option value={value} />
+          ))}
       </datalist>
       <DebouncedInput
         type="text"
         value={(columnFilterValue ?? "") as string}
         onChange={(value) => column.setFilterValue(value)}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-        className="w-36 border shadow rounded"
+        class="w-36 border shadow rounded"
         list={column.id + "list"}
       />
       <div class="h-1" />
     </>
   );
 }
-
-// const rootElement = document.getElementById('root')
-// if (!rootElement) throw new Error('Failed to find the root element')
-
-// ReactDOM.createRoot(rootElement).render(
-//   <React.StrictMode>
-//     <App />
-//   </React.StrictMode>
-// )
 
 export default App;
