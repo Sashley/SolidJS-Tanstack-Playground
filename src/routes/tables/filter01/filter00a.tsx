@@ -272,14 +272,14 @@ function App() {
         />
       </div>
       <table>
-        <thead class="bg-stone-100">
+        <thead class="bg-slate-100">
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (
               <tr>
                 <For each={headerGroup.headers}>
                   {(column) => (
                     <th
-                      class="border bg-stone-200 px-8"
+                      class="border bg-slate-200 px-8"
                       // {...column.getHeaderProps()}
                       colSpan={column.colSpan}
                     >
@@ -296,7 +296,7 @@ function App() {
                           {/* <div
                             {...{
                               class: column.column.getCanSort()
-                                ? "cursor-pointer select-none bg-stone-300"
+                                ? "cursor-pointer select-none bg-blue-300"
                                 : "",
                               onClick: column.column.getToggleSortingHandler(),
                             }}
@@ -314,33 +314,25 @@ function App() {
                           <div
                             class={
                               column.column.getCanSort()
-                                ? "cursor-pointer select-none bg-stone-300"
+                                ? "cursor-pointer select-none bg-blue-300"
                                 : ""
                             }
-                            onClick={
-                              // () =>
-                              // console.log(
-                              //   "function ...",
-                              //   column.column.getToggleSortingHandler()
-                              // )
-                              column.column.getToggleSortingHandler()
+                            onClick={() =>
+                              console.log(
+                                column.column.getToggleSortingHandler()
+                              )
                             }
                           >
                             {flexRender(
                               column.column.columnDef.header,
                               column.getContext()
                             )}
-                            {/* <Show when={column.column.getIsSorted() === "asc"}>
+                            <Show when={column.column.getIsSorted() === "asc"}>
                               🔼
                             </Show>
                             <Show when={column.column.getIsSorted() === "desc"}>
                               🔽
-                            </Show> */}
-
-                            {{
-                              asc: " 🔼",
-                              desc: " 🔽",
-                            }[column.column.getIsSorted() as string] ?? null}
+                            </Show>
                           </div>
 
                           {column.column.getCanFilter() ? (
@@ -384,7 +376,7 @@ function App() {
           ))} */}
           <For each={table.getRowModel().rows}>
             {(row) => (
-              <tr class="bg-stone-50">
+              <tr class="bg-slate-50">
                 <For each={row.getVisibleCells()}>
                   {(cell) => (
                     <td>

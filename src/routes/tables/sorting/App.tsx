@@ -5,6 +5,7 @@ import {
   SortingState,
   ColumnDef,
   createSolidTable,
+  Row,
 } from "@tanstack/solid-table";
 import { makeData, Person } from "./makeData";
 import { createSignal, For, Show } from "solid-js";
@@ -80,6 +81,9 @@ function App() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
+    filterFns: {
+      fuzzy: (rows, id, filterValue) => fuzzyFilter(rows, id, filterValue),
+    },
   });
 
   return (
@@ -147,3 +151,6 @@ function App() {
 }
 
 export default App;
+function fuzzyFilter(rows: Row<any>, id: string, filterValue: any): boolean {
+  throw new Error("Function not implemented.");
+}
