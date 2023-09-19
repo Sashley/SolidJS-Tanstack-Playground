@@ -23,6 +23,7 @@ function App() {
         {
           accessorKey: "firstName",
           cell: (info) => info.getValue(),
+          header: () => <span>First Name</span>,
           footer: (props) => props.column.id,
         },
         {
@@ -81,6 +82,9 @@ function App() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
+    filterFns: {
+      fuzzy: (rows, id, filterValue) => fuzzyFilter(rows, id, filterValue),
+    },
   });
 
   return (
@@ -97,7 +101,7 @@ function App() {
                         <div
                           class={
                             header.column.getCanSort()
-                              ? "cursor-pointer select-none"
+                              ? "cursor-pointer select-none bg-stone-300 rounded m-1 px-2"
                               : undefined
                           }
                           onClick={header.column.getToggleSortingHandler()}
@@ -153,3 +157,6 @@ function App() {
 }
 
 export default App;
+function fuzzyFilter(rows: Row<any>, id: string, filterValue: any): boolean {
+  throw new Error("Function not implemented.");
+}

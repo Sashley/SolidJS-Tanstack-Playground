@@ -87,12 +87,12 @@ function App() {
   });
 
   return (
-    <div class="p-10 bg-slate-200">
+    <div class="p-10 bg-stone-200">
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (
-              <tr>
+              <tr class="bg-stone-300">
                 <For each={headerGroup.headers}>
                   {(header) => (
                     <th colSpan={header.colSpan}>
@@ -100,7 +100,7 @@ function App() {
                         <div
                           class={
                             header.column.getCanSort()
-                              ? "cursor-pointer select-none"
+                              ? "cursor-pointer select-none px-6"
                               : undefined
                           }
                           onClick={header.column.getToggleSortingHandler()}

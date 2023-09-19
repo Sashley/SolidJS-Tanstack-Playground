@@ -5,7 +5,6 @@ import {
   createEffect,
   createMemo,
   createSignal,
-  onCleanup,
 } from "solid-js";
 
 // import "./makeData";
@@ -87,20 +86,27 @@ type DebouncedInputProps<T> = {
 function DebouncedInput({
   value: initialValue,
   onChange,
-  debounce = 3500,
+  debounce = 500,
   ...props
 }: DebouncedInputProps<string | number>) {
-  const [value, setValue] = createSignal<string | number>(initialValue);
-  // console.log("value 2: ", value());
-
-  let timeout: any;
+  const [value, setValue] = createSignal<string>(
+    (initialValue as any).toString()
+  );
 
   createEffect(() => {
-    timeout = setTimeout(() => {
-      // console.log("value 1: ", value());
-      onChange(value());
+    console.log("initialValue: ", initialValue);
+    setValue((initialValue as any).toString());
+  });
+
+  createEffect(() => {
+    const timeout = setTimeout(() => {
+      if (typeof initialValue === "number") {
+        onChange(Number(value()));
+      } else {
+        onChange(value());
+      }
     }, debounce);
-    console.log("timeout, value: ", timeout, value());
+
     return () => clearTimeout(timeout);
   });
 
@@ -108,7 +114,7 @@ function DebouncedInput({
     <input
       {...props}
       value={value()}
-      onChange={(e) => setValue(e.currentTarget.value)}
+      onInput={(e) => setValue(e.currentTarget.value)}
     />
   );
 }
@@ -130,7 +136,6 @@ function App() {
             accessorFn: (row) => row.firstName,
             id: "firstName",
             cell: (info) => info.getValue(),
-            header: () => <span>First Name</span>,
             footer: (props) => props.column.id,
           },
           {
@@ -197,7 +202,7 @@ function App() {
 
     state: {
       columnFilters: columnFilters(),
-      // globalFilter,
+      globalFilter,
       get sorting() {
         return sorting();
       },
@@ -233,36 +238,18 @@ function App() {
   const [state, setState] = createSignal<TableState>(table.initialState);
 
   // Override the state managers for the table to your own
-  // table.setOptions((prev) => ({
-  //   ...prev,
-  //   state: state(),
-  //   onStateChange: setState,
-  //   // These are just table options, so if things
-  //   // need to change based on your state, you can
-  //   // derive them here
+  table.setOptions((prev) => ({
+    ...prev,
+    state: state(),
+    onStateChange: setState,
+    // These are just table options, so if things
+    // need to change based on your state, you can
+    // derive them here
 
-  //   // Just for fun, let's debug everything if the pageIndex
-  //   // is greater than 2
-  //   debugTable: state().pagination.pageIndex > 2,
-  // }));
-
-  table.setOptions((prev) => {
-    // console.log("prev: ", prev);
-    const currentState = state(); // gets the current value
-    // console.log("currentState: ", currentState);
-
-    // Cleanup any previous reactions, if necessary
-    onCleanup(() => {
-      // Cleanup code if necessary
-    });
-
-    return {
-      ...prev, // spread previous options
-      setState: currentState, // set the current state
-      onStateChange: setState,
-      debugTable: currentState.pagination.pageIndex > 2,
-    };
-  });
+    // Just for fun, let's debug everything if the pageIndex
+    // is greater than 2
+    debugTable: state().pagination.pageIndex > 2,
+  }));
 
   function getClassValue(column: any): string | undefined {
     const facetedValues = column.column._getFacetedMinMaxValues?.();
@@ -316,7 +303,7 @@ function App() {
                             asc: " 🔼",
                             desc: " 🔽",
                           }[header.column.getIsSorted() as string] ?? null}{" "}
-                          {/* {header.column.getIsSorted()} */}
+                          {header.column.getIsSorted()}
                         </div>
 
                         {header.column.getCanFilter() ? (
@@ -356,9 +343,6 @@ function App() {
       <button onClick={() => refreshData()} class="border p-2">
         Rerender
       </button>
-      <pre>{JSON.stringify(sorting(), null, 2)}</pre>
-      <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
-      {/* <pre>{JSON.stringify(filter({columns, table}))}</pre> */}
     </div>
   );
 }
@@ -370,20 +354,11 @@ function Filter({
   column: Column<any, unknown>;
   table: Table<any>;
 }) {
-  // console.log("column: ", column);
-  // console.log("table: ", table);
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
 
   const columnFilterValue = column.getFilterValue();
-
-  console.log(
-    "columnFilterValue: ",
-    columnFilterValue,
-    "firstValue: ",
-    firstValue
-  );
 
   const sortedUniqueValues = createMemo(
     () =>
@@ -418,7 +393,7 @@ function Filter({
           value={(columnFilterValue as [number, number])?.[1] ?? ""}
           onChange={(value) => {
             column.setFilterValue((old: [number, number]) => [old?.[0], value]);
-            // console.log("value: ", value);
+            console.log("value: ", value);
           }}
           placeholder={`Max ${
             column.getFacetedMinMaxValues()?.[1]
@@ -437,8 +412,8 @@ function Filter({
           .slice(0, 5000)
           .map((value: any) => (
             <option value={value} />
-          ))}{" "}
-      </datalist>{" "}
+          ))}
+      </datalist>
       <DebouncedInput
         type="text"
         value={(columnFilterValue ?? "") as string}
