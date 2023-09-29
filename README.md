@@ -28,3 +28,61 @@ npm run dev -- --open
 Solid apps are built with _adapters_, which optimise your project for deployment to different environments.
 
 By default, `npm run build` will generate a Node app that you can run with `npm start`. To use a different adapter, add it to the `devDependencies` in `package.json` and specify in your `vite.config.js`.
+
+# Tanstack filters
+
+## imports
+
+## const
+
+- fuzzyFilter
+- MakeData
+
+## debouncedInput
+
+- Props
+- function
+
+## App
+
+### const
+
+- globalFilter
+- columnFilters
+- columns
+- data
+- refresh data
+
+### table
+
+- createEffect (cleanUp?)
+- state (tableState)
+- table.setOptions
+
+### function
+
+- getClassValue
+
+### return
+
+- table
+- button
+- refreshData
+- json.stringify.table.getState
+
+### function
+
+## Filter
+
+- const firstValue
+- const columnFilterValue
+- function testFilter01
+
+### const testFilterValue
+
+- sortUniqueValues
+- return
+
+### firstValue
+
+### debouncedInput

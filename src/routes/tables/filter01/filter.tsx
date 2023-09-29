@@ -20,11 +20,7 @@ import {
   getPaginationRowModel,
   createSolidTable,
   TableState,
-  FilterFns,
   FilterFn,
-  SortingFn,
-  sortingFns,
-  SortingState,
   ColumnFiltersState,
   getFilteredRowModel,
   getSortedRowModel,
@@ -39,15 +35,6 @@ import {
   compareItems,
 } from "@tanstack/match-sorter-utils";
 
-declare module "@tanstack/table-core" {
-  interface FilterFns {
-    fuzzy: FilterFn<unknown>;
-  }
-  interface FilterMeta {
-    itemRank: RankingInfo;
-  }
-}
-
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value);
@@ -61,22 +48,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
-  let dir = 0;
-
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!
-    );
-  }
-
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
-};
-
-const defaultData = () => makeData(1000);
+const defaultData = () => makeData(10);
 
 type DebouncedInputProps<T> = {
   value: T;
@@ -87,38 +59,44 @@ type DebouncedInputProps<T> = {
 function DebouncedInput({
   value: initialValue,
   onChange,
-  debounce = 3500,
+  debounce = 500,
   ...props
 }: DebouncedInputProps<string | number>) {
-  const [value, setValue] = createSignal<string | number>(initialValue);
-  // console.log("value 2: ", value());
+  const [filterValue, setFilterValue] = createSignal<string | number>(
+    initialValue
+  );
+  // console.log(?"filterValue 2: ", filterValue());
 
-  let timeout: any;
+  // let timeout: any;
 
   createEffect(() => {
-    timeout = setTimeout(() => {
-      // console.log("value 1: ", value());
-      onChange(value());
+    setFilterValue(initialValue);
+  }, [initialValue]);
+
+  createEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(filterValue());
     }, debounce);
-    console.log("timeout, value: ", timeout, value());
+
     return () => clearTimeout(timeout);
-  });
+  }, [filterValue, onChange, debounce]);
 
   return (
     <input
       {...props}
-      value={value()}
-      onChange={(e) => setValue(e.currentTarget.value)}
+      value={filterValue()}
+      onChange={(e) => setFilterValue(e.currentTarget.value)}
     />
   );
 }
 
 function App() {
-  const [globalFilter, setGlobalFilter] = createSignal("");
   const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>(
     []
   );
-  const [sorting, setSorting] = createSignal<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = createSignal("");
+
+  // const [sorting, setSorting] = createSignal<SortingState>([]);
   const columns = createMemo<ColumnDef<Person, any>[]>(
     () => [
       {
@@ -126,11 +104,11 @@ function App() {
         footer: (props) => props.column.id,
         columns: [
           {
-            // accessorKey: "firstName",
-            accessorFn: (row) => row.firstName,
-            id: "firstName",
+            accessorKey: "firstName",
+            // accessorFn: (row) => row.firstName,
+            // id: "firstName",
             cell: (info) => info.getValue(),
-            header: () => <span>First Name</span>,
+            // header: () => <span>First Name</span>,
             footer: (props) => props.column.id,
           },
           {
@@ -142,43 +120,12 @@ function App() {
           },
         ],
       },
-      {
-        header: "Info",
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: "age",
-            header: () => "Age",
-            footer: (props) => props.column.id,
-          },
-          {
-            header: "More Info",
-            columns: [
-              {
-                accessorKey: "visits",
-                header: () => <span>Visits</span>,
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: "status",
-                header: "Status",
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: "progress",
-                header: "Profile Progress",
-                footer: (props) => props.column.id,
-              },
-            ],
-          },
-        ],
-      },
     ],
     []
   );
 
-  const [data, setData] = createSignal<Person[]>(makeData(1000));
-  const refreshData = () => setData((old) => makeData(1000));
+  const [data, setData] = createSignal<Person[]>(makeData(50000));
+  const refreshData = () => setData((old) => makeData(50000));
 
   // Create the table and pass your options
   const table = createSolidTable({
@@ -186,32 +133,26 @@ function App() {
       return data();
     },
     columns: columns(),
-    // filterFns: {
-    //   fuzzy: fuzzyFilter,
-    // },
-
     filterFns: {
-      fuzzy: (rows, id, filterValue, addMeta) =>
-        fuzzyFilter(rows, id, filterValue, addMeta),
+      fuzzy: fuzzyFilter,
     },
 
     state: {
-      columnFilters: columnFilters(),
-      // globalFilter,
-      get sorting() {
-        return sorting();
+      get columnFilters() {
+        return columnFilters();
       },
+      // columnFilters: columnFilters(), //??
+      get globalFilter() {
+        return globalFilter();
+      },
+      // globalFilter: globalFilter(),
     },
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
-
     getCoreRowModel: getCoreRowModel(),
-
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -229,62 +170,38 @@ function App() {
     }
   }, [table.getState().columnFilters[0]?.id]);
 
-  // Manage your own state
-  const [state, setState] = createSignal<TableState>(table.initialState);
+  // // Manage your own state
+  // const [state, setState] = createSignal<TableState>(table.initialState);
 
-  // Override the state managers for the table to your own
-  // table.setOptions((prev) => ({
-  //   ...prev,
-  //   state: state(),
-  //   onStateChange: setState,
-  //   // These are just table options, so if things
-  //   // need to change based on your state, you can
-  //   // derive them here
+  // table.setOptions((prev) => {
+  //   const currentState = state(); // gets the current value
 
-  //   // Just for fun, let's debug everything if the pageIndex
-  //   // is greater than 2
-  //   debugTable: state().pagination.pageIndex > 2,
-  // }));
+  //   // Cleanup any previous reactions, if necessary
+  //   onCleanup(() => {
+  //     // Cleanup code if necessary
+  //   });
 
-  table.setOptions((prev) => {
-    // console.log("prev: ", prev);
-    const currentState = state(); // gets the current value
-    // console.log("currentState: ", currentState);
+  //   return {
+  //     ...prev, // spread previous options
+  //     setState: currentState, // set the current state
+  //     onStateChange: setState,
+  //     debugTable: currentState.pagination.pageIndex > 2,
+  //   };
+  // });
 
-    // Cleanup any previous reactions, if necessary
-    onCleanup(() => {
-      // Cleanup code if necessary
-    });
+  // function getClassValue(column: any): string | undefined {
+  //   const facetedValues = column.column._getFacetedMinMaxValues?.();
 
-    return {
-      ...prev, // spread previous options
-      setState: currentState, // set the current state
-      onStateChange: setState,
-      debugTable: currentState.pagination.pageIndex > 2,
-    };
-  });
-
-  function getClassValue(column: any): string | undefined {
-    const facetedValues = column.column._getFacetedMinMaxValues?.();
-
-    if (Array.isArray(facetedValues)) {
-      return facetedValues.join(" - ");
-    } else if (facetedValues !== undefined) {
-      return facetedValues.toString();
-    }
-    return ""; // return empty string by default
-  }
+  //   if (Array.isArray(facetedValues)) {
+  //     return facetedValues.join(" - ");
+  //   } else if (facetedValues !== undefined) {
+  //     return facetedValues.toString();
+  //   }
+  //   return ""; // return empty string by default
+  // }
 
   return (
     <div class="p-2">
-      <div class="pb-4">
-        <DebouncedInput
-          value={globalFilter() ?? ""}
-          onChange={(value) => setGlobalFilter(String(value))}
-          class="p-2 font-lg shadow border border-block"
-          placeholder="Search all columns..."
-        />
-      </div>
       <table>
         <thead class="bg-stone-100">
           <For each={table.getHeaderGroups()}>
@@ -296,35 +213,19 @@ function App() {
                       class="border bg-stone-200 px-8"
                       colSpan={header.colSpan}
                     >
-                      <Show when={!header.isPlaceholder}>
-                        <div>
-                          <div class={getClassValue(header)}></div>
-                        </div>
-                        <div
-                          class={
-                            header.column.getCanSort()
-                              ? "cursor-pointer select-none bg-stone-300 rounded m-1"
-                              : ""
-                          }
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}{" "}
-                          {{
-                            asc: " 🔼",
-                            desc: " 🔽",
-                          }[header.column.getIsSorted() as string] ?? null}{" "}
-                          {/* {header.column.getIsSorted()} */}
-                        </div>
+                      <div>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}{" "}
+                      </div>
 
-                        {header.column.getCanFilter() ? (
-                          <div class="bg-stone-300">
-                            <Filter column={header.column} table={table} />
-                          </div>
-                        ) : null}
-                      </Show>
+                      {header.column.getCanFilter() ? (
+                        <div class="bg-stone-300">
+                          {" "}
+                          <Filter column={header.column} table={table} />
+                        </div>
+                      ) : null}
                     </th>
                   )}
                 </For>
@@ -353,12 +254,13 @@ function App() {
       </table>
       <div class="h-2" />
       <div class="h-4" />
-      <button onClick={() => refreshData()} class="border p-2">
-        Rerender
+      <button
+        onClick={() => refreshData()}
+        class="border p-2 bg-stone-200 rounded"
+      >
+        Rerender 1
       </button>
-      <pre>{JSON.stringify(sorting(), null, 2)}</pre>
       <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
-      {/* <pre>{JSON.stringify(filter({columns, table}))}</pre> */}
     </div>
   );
 }
@@ -370,20 +272,18 @@ function Filter({
   column: Column<any, unknown>;
   table: Table<any>;
 }) {
-  // console.log("column: ", column);
-  // console.log("table: ", table);
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
 
   const columnFilterValue = column.getFilterValue();
 
-  console.log(
-    "columnFilterValue: ",
-    columnFilterValue,
-    "firstValue: ",
-    firstValue
-  );
+  function testFilter01() {
+    const [testFilterValue, setTestFilterValue] = createSignal<string | number>(
+      columnFilterValue ? " " : " "
+    );
+    console.log("fired testFilter01");
+  }
 
   const sortedUniqueValues = createMemo(
     () =>
@@ -395,39 +295,6 @@ function Filter({
 
   return typeof firstValue === "number" ? (
     <div>
-      <div class="flex space-x-2">
-        <DebouncedInput
-          type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? "")}
-          value={(columnFilterValue as [number, number])?.[0] ?? ""}
-          onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [value, old?.[1]])
-          }
-          placeholder={`Min ${
-            column.getFacetedMinMaxValues()?.[0]
-              ? `(${column.getFacetedMinMaxValues()?.[0]})`
-              : ""
-          }`}
-          class="w-24 border shadow rounded"
-        />
-        <DebouncedInput
-          type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? "")}
-          value={(columnFilterValue as [number, number])?.[1] ?? ""}
-          onChange={(value) => {
-            column.setFilterValue((old: [number, number]) => [old?.[0], value]);
-            // console.log("value: ", value);
-          }}
-          placeholder={`Max ${
-            column.getFacetedMinMaxValues()?.[1]
-              ? `(${column.getFacetedMinMaxValues()?.[1]})`
-              : ""
-          }`}
-          class="w-24 border shadow rounded"
-        />
-      </div>
       <div class="h-1" />
     </div>
   ) : (
@@ -439,14 +306,39 @@ function Filter({
             <option value={value} />
           ))}{" "}
       </datalist>{" "}
-      <DebouncedInput
+      <input
         type="text"
-        value={(columnFilterValue ?? "") as string}
-        onChange={(value) => column.setFilterValue(value)}
+        value={(column.getFilterValue() ?? "") as string}
+        // onChange={(value) => {
+        //   // console.log("value filter: ", value, "column.id", column.id);
+        //   console.log("value filter: ", value, "column.id", column.id);
+        //   // column.setFilterValue(value);
+        //   column.setFilterValue(value);
+        //   // setTestFilterValue(value);
+        //   testFilter01();
+        //   // table.setColumnFilters((prev) => ({
+        //   //   ...prev,
+        //   //   [column.id]: value,
+        //   // }));
+        //   console.log("column.getFilterValue(): ", column.getFilterValue());
+        //   console.log("columnFilterValue: ", columnFilterValue);
+        //   // console.log("testFilterValue: ", testFilterValue());
+        // }}
+        // onChange={(value) => column.setFilterValue(value)}
+        onInput={(e) => column.setFilterValue(e.currentTarget.value)}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
         class="w-36 border shadow rounded"
         list={column.id + "list"}
-      />
+      />{" "}
+      <div>
+        <pre>
+          {String(
+            column.getFilterValue() !== undefined
+              ? column.getFilterValue()
+              : "no filter"
+          )}
+        </pre>
+      </div>
       <div class="h-1" />
     </>
   );
