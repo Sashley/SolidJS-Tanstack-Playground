@@ -122,6 +122,20 @@ export default function Root() {
                 >
                   <A href="/tables/filter01/filter">Filter01</A>
                 </li>
+                <li
+                  class={`border-b-2 ${active(
+                    "/tables/filter01/filter03a"
+                  )} mx-1.5 sm:mx-6`}
+                >
+                  <A href="/tables/filter01/filter03a">Filter03a</A>
+                </li>
+                <li
+                  class={`border-b-2 ${active(
+                    "/tables/filter01/filter03d"
+                  )} mx-1.5 sm:mx-6`}
+                >
+                  <A href="/tables/filter01/filter03d">Filter03d</A>
+                </li>
               </ul>
             </nav>
             <Routes>

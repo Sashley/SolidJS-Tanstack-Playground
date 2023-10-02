@@ -310,10 +310,10 @@ function Filter({
             <option value={value} />
           ))}{" "}
       </datalist>{" "}
-      <input
+      <DebouncedInput
         type="text"
         value={(column.getFilterValue() ?? "") as string}
-        onInput={(e) => column.setFilterValue(e.currentTarget.value)}
+        onChange={(value) => column.setFilterValue(value)}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
         class="w-36 border shadow rounded"
         list={column.id + "list"}

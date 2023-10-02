@@ -91,10 +91,10 @@ function DebouncedInput({
 }
 
 function App() {
-  const [globalFilter, setGlobalFilter] = createSignal("");
   const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>(
     []
   );
+  const [globalFilter, setGlobalFilter] = createSignal("");
 
   // const [sorting, setSorting] = createSignal<SortingState>([]);
   const columns = createMemo<ColumnDef<Person, any>[]>(
@@ -124,7 +124,7 @@ function App() {
     []
   );
 
-  const [data, setData] = createSignal<Person[]>(makeData(5000));
+  const [data, setData] = createSignal<Person[]>(makeData(50000));
   const refreshData = () => setData((old) => makeData(50000));
 
   // Create the table and pass your options
@@ -202,9 +202,6 @@ function App() {
 
   return (
     <div class="p-2">
-      <div class="text-xs bg-stone-100 p-2 m-2">
-        Note: First, basic filtering attempt, string only
-      </div>
       <table>
         <thead class="bg-stone-100">
           <For each={table.getHeaderGroups()}>
@@ -279,13 +276,12 @@ function Filter({
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
 
-  // const columnFilterValue = column.getFilterValue();
+  const columnFilterValue = column.getFilterValue();
 
   function testFilter01() {
-    const [testFilterValue, setTestFilterValue] = createSignal<
-      string | number
-    >();
-    // columnFilterValue ? " " : " "
+    const [testFilterValue, setTestFilterValue] = createSignal<string | number>(
+      columnFilterValue ? " " : " "
+    );
     console.log("fired testFilter01");
   }
 
