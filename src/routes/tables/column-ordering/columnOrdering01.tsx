@@ -95,116 +95,122 @@ function App() {
   };
 
   return (
-    <div class="flex p-4 bg-amber-50">
-      <div class="flex-col w-32">
-        <div class="bg-amber-200 inline-block border border-black shadow rounded">
-          <div class="px-1 border-b border-black">
-            <label>
-              <input
-                checked={table.getIsAllColumnsVisible()}
-                onChange={table.getToggleAllColumnsVisibilityHandler()}
-                type="checkbox"
-              />{" "}
-              Toggle All
-            </label>
+    <div class="bg-stone-100 text-sm m-4">
+      <div class="text-xs bg-stone-200 p-2 m-2">
+        Note: Ordering Column-Selection table |
+        /tables/column-ordering/columnOrdering01 | ColumnOrdering01
+      </div>
+      <div class="flex p-4 bg-stone-100">
+        <div class="flex-auto">
+          <div class="bg-stone-300 inline-block shadow rounded p-4  text-sm">
+            <div class="px-1 border-b border-black">
+              <label>
+                <input
+                  checked={table.getIsAllColumnsVisible()}
+                  onChange={table.getToggleAllColumnsVisibilityHandler()}
+                  type="checkbox"
+                />{" "}
+                Toggle All
+              </label>
+            </div>
+            <For each={table.getAllLeafColumns()}>
+              {(column) => (
+                <div class="px-1">
+                  <label>
+                    <input
+                      checked={column.getIsVisible()}
+                      onChange={column.getToggleVisibilityHandler()}
+                      type="checkbox"
+                    />{" "}
+                    {column.id}
+                  </label>
+                </div>
+              )}
+            </For>
           </div>
-          <For each={table.getAllLeafColumns()}>
-            {(column) => (
-              <div class="px-1">
-                <label>
-                  <input
-                    checked={column.getIsVisible()}
-                    onChange={column.getToggleVisibilityHandler()}
-                    type="checkbox"
-                  />{" "}
-                  {column.id}
-                </label>
-              </div>
-            )}
-          </For>
+          <div class="h-4" />
+          <div class="flex-col">
+            <button
+              onClick={() => rerender()}
+              class="border p-2 bg-stone-300 rounded w-24 text-sm hover:bg-stone-500"
+            >
+              Regenerate
+            </button>
+            <button
+              onClick={() => randomizeColumns()}
+              class="border p-2 bg-stone-300 rounded w-24 text-sm hover:bg-stone-500"
+            >
+              Shuffle Columns
+            </button>
+          </div>
         </div>
-        <div class="h-4" />
-        <div class="flex-col">
-          <button
-            onClick={() => rerender()}
-            class="border p-2 bg-amber-300 rounded w-24 text-sm hover:bg-amber-500"
-          >
-            Regenerate
-          </button>
-          <button
-            onClick={() => randomizeColumns()}
-            class="border p-2 bg-amber-300 rounded w-24 text-sm hover:bg-amber-500"
-          >
-            Shuffle Columns
-          </button>
+        <div class="flex-auto mx-2 text-xs">
+          {/* <div class="h-4" /> */}
+          <table>
+            <thead class="bg-stone-200">
+              <For each={table.getHeaderGroups()}>
+                {(headerGroup) => (
+                  <tr>
+                    <For each={headerGroup.headers}>
+                      {(header) => (
+                        <th colSpan={header.colSpan}>
+                          <Show when={!header.isPlaceholder}>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                          </Show>
+                        </th>
+                      )}
+                    </For>
+                  </tr>
+                )}
+              </For>
+            </thead>
+            <tbody class="bg-stone-100">
+              <For each={table.getRowModel().rows}>
+                {(row) => (
+                  <tr>
+                    <For each={row.getVisibleCells()}>
+                      {(cell) => (
+                        <td class="px-8">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      )}
+                    </For>
+                  </tr>
+                )}
+              </For>
+            </tbody>
+            {/* <tfoot>
+              <For each={table.getFooterGroups()}>
+                {(footerGroup) => (
+                  <tr>
+                    <For each={footerGroup.headers}>
+                      {(header) => (
+                        <th colSpan={header.colSpan}>
+                          <Show when={!header.isPlaceholder}>
+                            {flexRender(
+                              header.column.columnDef.footer,
+                              header.getContext()
+                            )}
+                          </Show>
+                        </th>
+                      )}
+                    </For>
+                  </tr>
+                )}
+              </For>
+            </tfoot> */}
+          </table>
         </div>
-      </div>
-      <div class="flex-auto">
-        {/* <div class="h-4" /> */}
-        <table>
-          <thead class="bg-amber-200">
-            <For each={table.getHeaderGroups()}>
-              {(headerGroup) => (
-                <tr>
-                  <For each={headerGroup.headers}>
-                    {(header) => (
-                      <th colSpan={header.colSpan}>
-                        <Show when={!header.isPlaceholder}>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                        </Show>
-                      </th>
-                    )}
-                  </For>
-                </tr>
-              )}
-            </For>
-          </thead>
-          <tbody class="bg-amber-100">
-            <For each={table.getRowModel().rows}>
-              {(row) => (
-                <tr>
-                  <For each={row.getVisibleCells()}>
-                    {(cell) => (
-                      <td class="px-8">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    )}
-                  </For>
-                </tr>
-              )}
-            </For>
-          </tbody>
-          {/* <tfoot>
-            <For each={table.getFooterGroups()}>
-              {(footerGroup) => (
-                <tr>
-                  <For each={footerGroup.headers}>
-                    {(header) => (
-                      <th colSpan={header.colSpan}>
-                        <Show when={!header.isPlaceholder}>
-                          {flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext()
-                          )}
-                        </Show>
-                      </th>
-                    )}
-                  </For>
-                </tr>
-              )}
-            </For>
-          </tfoot> */}
-        </table>
-      </div>
 
-      <div class="h-4" />
-      <pre>{JSON.stringify(table.getState().columnOrder, null, 2)}</pre>
+        <div class="h-4" />
+        <pre>{JSON.stringify(table.getState().columnOrder, null, 2)}</pre>
+      </div>
     </div>
   );
 }

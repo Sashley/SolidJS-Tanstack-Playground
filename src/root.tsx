@@ -14,13 +14,14 @@ import {
   Title,
 } from "solid-start";
 import "./root.css";
+import Layout from "./routes/layout/layout03";
 
 export default function Root() {
-  const location = useLocation();
-  const active = (path: string) =>
-    path == location.pathname
-      ? "border-stone-800"
-      : "border-transparent hover:border-stone-800";
+  // const location = useLocation();
+  // const active = (path: string) =>
+  // path == location.pathname
+  //   ? "border-stone-800"
+  //   : "border-transparent hover:border-stone-800";
   return (
     <Html lang="en">
       <Head>
@@ -31,116 +32,7 @@ export default function Root() {
       <Body>
         <Suspense>
           <ErrorBoundary>
-            <nav class="bg-stone-600">
-              <ul class="container flex items-center p-3 text-stone-100 text-xs">
-                <li class={`border-b-2 ${active("/")} mx-1.5 sm:mx-6`}>
-                  <A href="/">Home</A>
-                </li>
-                <li class={`border-b-2 ${active("/about")} mx-1.5 sm:mx-6`}>
-                  <A href="/about">About</A>
-                </li>
-                <li
-                  class={`border-b-2 ${active("/tableBasic")} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tableBasic">TableBasic</A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/basic/index"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/basic/App">TableBasic02</A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/basic/tableBasicRoot"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/basic/tableBasicRoot">TableBasic03</A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/column-groups/rootColumnGroup01"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/column-groups/rootColumnGroup01">
-                    ColumnGroup01
-                  </A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/column-groups/rootColumnGroup02"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/column-groups/rootColumnGroup02">
-                    ColumnGroup02
-                  </A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tableBasicRoot"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tableBasicRoot">TableBasic04</A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/column-ordering/columnOrdering01"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/column-ordering/columnOrdering01">
-                    ColumnOrdering01
-                  </A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/column-visibility/visibility01"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/column-visibility/visibility01">
-                    Visbility01
-                  </A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/sorting/App"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/sorting/App">Sorting</A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/sorting/sorting01"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/sorting/sorting01">Sorting01</A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/filter01/filter"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/filter01/filter">Filter01</A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/filter01/filter03a"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/filter01/filter03a">Filter03a</A>
-                </li>
-                <li
-                  class={`border-b-2 ${active(
-                    "/tables/filter01/filter03d"
-                  )} mx-1.5 sm:mx-6`}
-                >
-                  <A href="/tables/filter01/filter03d">Filter03d</A>
-                </li>
-              </ul>
-            </nav>
-            <Routes>
-              <FileRoutes />
-            </Routes>
+            <Layout />
           </ErrorBoundary>
         </Suspense>
         <Scripts />

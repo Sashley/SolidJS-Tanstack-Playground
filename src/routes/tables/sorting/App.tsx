@@ -87,7 +87,10 @@ function App() {
   });
 
   return (
-    <div class="p-10 bg-stone-200">
+    <div class="p-2 bg-stone-200 m-4 text-sm">
+      <div class="text-xs bg-stone-100 p-2 m-2">
+        Note: Layout | /tables/sorting/App | Layout Example 02
+      </div>
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -143,7 +146,12 @@ function App() {
       </table>
       <div>{table.getRowModel().rows.length} Rows</div>
       <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
+        <button
+          class="bg-stone-400 p-2 rounded m-4"
+          onClick={() => refreshData()}
+        >
+          Refresh Data
+        </button>
       </div>
       <pre>{JSON.stringify(sorting(), null, 2)}</pre>
     </div>

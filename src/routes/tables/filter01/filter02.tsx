@@ -201,7 +201,10 @@ function App() {
   // }
 
   return (
-    <div class="p-2">
+    <div class="p-2  bg-stone-300 m-4 text-sm">
+      <div class="text-xs bg-stone-100 p-2 m-2">
+        Note: Filter02 | /tables/filter01/filter02 | Filter02
+      </div>
       <table>
         <thead class="bg-stone-100">
           <For each={table.getHeaderGroups()}>
@@ -260,7 +263,9 @@ function App() {
       >
         Rerender 1
       </button>
-      <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
+      <pre class="my-4 text-xs">
+        {JSON.stringify(table.getState(), null, 2)}
+      </pre>
     </div>
   );
 }

@@ -201,7 +201,7 @@ function App() {
   // }
 
   return (
-    <div class="p-2">
+    <div class="p-2 bg-stone-200 text-sm m-4">
       <div class="text-xs bg-stone-100 p-2 m-2">
         Note: First, basic filtering attempt, string only
       </div>

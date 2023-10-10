@@ -58,7 +58,7 @@ const defaultColumns: ColumnDef<Person>[] = [
         accessorFn: (row) => row.lastName,
         id: "lastName",
         cell: (info) => info.getValue(),
-        header: () => <span class="bg-orange-600">Last Name</span>,
+        header: () => <span class="bg-orange-100">Last Name</span>,
         footer: (props) => props.column.id,
       },
     ],
@@ -109,16 +109,20 @@ function App() {
   });
 
   return (
-    <div class="p-4 bg-sky-200">
-      <table class="p-10 bg-sky-300">
+    <div class="p-4 bg-stone-200">
+      <div class="text-xs bg-stone-100 p-2 m-2">
+        Note: basic column table r2 | /tables/column-groups/rootColumnGroup02 |
+        ColumnGroup02
+      </div>
+      <table class="p-10 bg-stone-50 m-4 text-sm">
         <thead class="p-4 ">
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (
-              <tr class="bg-sky-400">
+              <tr class="bg-stone-200">
                 <For each={headerGroup.headers}>
                   {(header) => (
                     <th
-                      class="pl-4 pr-8 text-left bg-sky-500"
+                      class="pl-4 pr-8 text-left bg-stone-300"
                       colSpan={header.colSpan}
                     >
                       {header.isPlaceholder
@@ -134,7 +138,7 @@ function App() {
             )}
           </For>
         </thead>
-        <tbody class="p-4 bg-sky-600">
+        <tbody class="p-4 bg-stone-200">
           <For each={table.getRowModel().rows}>
             {(row) => (
               <tr>

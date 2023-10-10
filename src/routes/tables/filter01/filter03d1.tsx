@@ -1,14 +1,6 @@
-import {
-  For,
-  JSX,
-  Show,
-  createEffect,
-  createMemo,
-  createSignal,
-  onCleanup,
-} from "solid-js";
+import { For, JSX, createEffect, createMemo, createSignal } from "solid-js";
+import { debounce } from "@solid-primitives/scheduled";
 
-// import "./makeData";
 import { makeData, Person } from "./makeData02";
 
 import {
@@ -17,23 +9,16 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   createSolidTable,
-  TableState,
   FilterFn,
   ColumnFiltersState,
   getFilteredRowModel,
-  getSortedRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
 } from "@tanstack/solid-table";
 
-import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from "@tanstack/match-sorter-utils";
+import { rankItem } from "@tanstack/match-sorter-utils";
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -48,55 +33,11 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-const defaultData = () => makeData(10);
-
-type DebouncedInputProps<T> = {
-  value: T;
-  onChange: (value: T) => void;
-  debounce?: number;
-} & Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "onChange">;
-
-function DebouncedInput({
-  value: initialValue,
-  onChange,
-  debounce = 500,
-  ...props
-}: DebouncedInputProps<string | number>) {
-  const [filterValue, setFilterValue] = createSignal<string | number>(
-    initialValue
-  );
-  // console.log(?"filterValue 2: ", filterValue());
-
-  // let timeout: any;
-
-  createEffect(() => {
-    setFilterValue(initialValue);
-  }, [initialValue]);
-
-  createEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(filterValue());
-    }, debounce);
-
-    return () => clearTimeout(timeout);
-  }, [filterValue, onChange, debounce]);
-
-  return (
-    <input
-      {...props}
-      value={filterValue()}
-      onChange={(e) => setFilterValue(e.currentTarget.value)}
-    />
-  );
-}
-
 function App() {
-  const [globalFilter, setGlobalFilter] = createSignal("");
   const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>(
     []
   );
 
-  // const [sorting, setSorting] = createSignal<SortingState>([]);
   const columns = createMemo<ColumnDef<Person, any>[]>(
     () => [
       {
@@ -105,10 +46,7 @@ function App() {
         columns: [
           {
             accessorKey: "firstName",
-            // accessorFn: (row) => row.firstName,
-            // id: "firstName",
             cell: (info) => info.getValue(),
-            // header: () => <span>First Name</span>,
             footer: (props) => props.column.id,
           },
           {
@@ -124,8 +62,7 @@ function App() {
     []
   );
 
-  const [data, setData] = createSignal<Person[]>(makeData(5000));
-  const refreshData = () => setData((old) => makeData(50000));
+  const [data, setData] = createSignal<Person[]>(makeData(10));
 
   // Create the table and pass your options
   const table = createSolidTable({
@@ -141,19 +78,10 @@ function App() {
       get columnFilters() {
         return columnFilters();
       },
-      // columnFilters: columnFilters(), //??
-      get globalFilter() {
-        return globalFilter();
-      },
-      // globalFilter: globalFilter(),
     },
     onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
@@ -170,42 +98,12 @@ function App() {
     }
   }, [table.getState().columnFilters[0]?.id]);
 
-  // // Manage your own state
-  // const [state, setState] = createSignal<TableState>(table.initialState);
-
-  // table.setOptions((prev) => {
-  //   const currentState = state(); // gets the current value
-
-  //   // Cleanup any previous reactions, if necessary
-  //   onCleanup(() => {
-  //     // Cleanup code if necessary
-  //   });
-
-  //   return {
-  //     ...prev, // spread previous options
-  //     setState: currentState, // set the current state
-  //     onStateChange: setState,
-  //     debugTable: currentState.pagination.pageIndex > 2,
-  //   };
-  // });
-
-  // function getClassValue(column: any): string | undefined {
-  //   const facetedValues = column.column._getFacetedMinMaxValues?.();
-
-  //   if (Array.isArray(facetedValues)) {
-  //     return facetedValues.join(" - ");
-  //   } else if (facetedValues !== undefined) {
-  //     return facetedValues.toString();
-  //   }
-  //   return ""; // return empty string by default
-  // }
-
   return (
     <div class="p-2 bg-stone-300 m-4 text-sm">
       <div class="text-xs bg-stone-100 p-2 m-2">
         Note: Second, filtering attempt, additional fields, string only, extra
         added it, own state managment was the original issue. |
-        /tables/filter01/filter03d | Filter03d
+        /tables/filter01/filter03d1 | Filter03d1
       </div>
       <div class="w-full-screen overflow-x-scroll">
         <table class="m-2 text-sm">
@@ -239,7 +137,7 @@ function App() {
               )}
             </For>
           </thead>
-          <tbody>
+          <tbody class="max-h-96">
             <For each={table.getRowModel().rows}>
               {(row) => (
                 <tr class="bg-stone-50">
@@ -260,16 +158,69 @@ function App() {
         </table>
       </div>
 
-      <div class="h-2" />
-      <div class="h-4" />
-      <button
-        onClick={() => refreshData()}
-        class="border p-2 bg-stone-200 rounded"
-      >
-        Rerender
-      </button>
-      <pre class="text-xs m-4">{JSON.stringify(table.getState(), null, 2)}</pre>
+      {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */}
     </div>
+  );
+}
+
+type DebouncedInputProps<T> = {
+  value: T;
+  onChange: (value: T) => void;
+  debounce?: number;
+} & Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "onChange">;
+
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: DebouncedInputProps<string | number>) {
+  const [filterValue, setFilterValue] = createSignal<string | number>(
+    initialValue === "" ? "" : initialValue
+  );
+
+  // console.log("filter value 1: ", initialValue);
+  // console.log("filter value 10: ", filterValue());
+
+  createEffect(() => {
+    setFilterValue(initialValue);
+  }, [initialValue]);
+
+  createEffect(() => {
+    const timeout = setTimeout(() => {
+      // console.log("filter value 1: ", filterValue());
+      onChange(filterValue());
+      console.log("effect run");
+      // console.log("filter value 2: ", filterValue());
+    }, debounce);
+
+    return () => clearTimeout(timeout);
+  }, [filterValue, onChange, debounce]);
+
+  // createEffect(() => {
+  //   // This effect will run whenever filterValue changes
+  //   console.log("Filter value updated:", filterValue());
+  // }, [filterValue]);
+
+  return (
+    <>
+      <input
+        {...props}
+        value={filterValue()}
+        // onInput={(e) => {
+        //   const newValue = e.currentTarget.value;
+        //   // console.log("Input value changed:", newValue);
+        //   setFilterValue(newValue); // Update the filter value
+        //   console.log("filterValue: ", filterValue());
+        //   // setFilterValue(e.currentTarget.value);
+        // }}
+        onChange={(e) => {
+          const newValue = e.currentTarget.value;
+          console.log("Input value changed:", newValue);
+        }}
+      />
+      {filterValue()}
+    </>
   );
 }
 
@@ -284,55 +235,78 @@ function Filter({
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
 
-  // const columnFilterValue = column.getFilterValue();
+  const columnFilterValue = column.getFilterValue();
 
-  function testFilter01() {
-    const [testFilterValue, setTestFilterValue] = createSignal<
-      string | number
-    >();
-    // columnFilterValue ? " " : " "
-    console.log("fired testFilter01");
-  }
+  const [filterVal, setFilterVal] = createSignal<string | number>("");
+
+  const applyFilter = () => {
+    // Apply filtering logic here using filterValue
+    // Example: Update the filtered data in the table
+    // const filteredData = (column.setFilterValue(filterVal))
+    column.setFilterValue(filterVal);
+  };
+
+  // Use a custom useEffect to apply filtering when filterValue changes
+  createEffect(() => {
+    applyFilter();
+  }, [filterVal]);
+
+  const uniqueValues = (): void => {
+    console.log(
+      "column.getFacetedUniqueValues(): ",
+      column.getFacetedUniqueValues()
+    );
+    Array.from(column.getFacetedUniqueValues().keys()).sort();
+  };
 
   const sortedUniqueValues = createMemo(
-    () =>
-      typeof firstValue === "number"
-        ? []
-        : Array.from(column.getFacetedUniqueValues().keys()).sort(),
+    () => (typeof firstValue === "number" ? [] : uniqueValues()),
     [column.getFacetedUniqueValues()]
   );
 
-  return typeof firstValue === "number" ? (
-    <div>
-      <div class="h-1" />
-    </div>
-  ) : (
+  return (
     <>
       <datalist id={column.id + "list"}>
-        {Array.from(sortedUniqueValues())
-          .slice(0, 5000)
+        {Array.from(sortedUniqueValues() || [])
+          .slice(0, 100)
           .map((value: any) => (
             <option value={value} />
           ))}{" "}
       </datalist>{" "}
       <DebouncedInput
         type="text"
-        value={(column.getFilterValue() ?? "") as string}
-        onChange={(value) => column.setFilterValue(value)}
+        // value={(columnFilterValue ?? "") as string}
+        value={filterVal()}
+        onChange={(value) => {
+          console.log("value: ", value);
+          console.log("columnFilterValue: ", columnFilterValue);
+          console.log("filterVal: ", filterVal());
+
+          // console.log(
+          //   "Input value changed:",
+          //   value,
+          //   "IVC: ",
+          //   columnFilterValue
+          // );
+          // column.setFilterValue(value);
+          // console.log("test");
+          // console.log("columnFilterValue: ", columnFilterValue);
+          setFilterVal(value);
+        }}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
         class="w-36 border shadow rounded"
         list={column.id + "list"}
       />{" "}
       <div>
         <pre>
+          {" "}
           {String(
             column.getFilterValue() !== undefined
               ? column.getFilterValue()
               : "no filter"
-          )}
+          )}{" "}
         </pre>
       </div>
-      <div class="h-1" />
     </>
   );
 }

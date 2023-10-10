@@ -265,10 +265,11 @@ function App() {
   }
 
   return (
-    <div class="p-2">
+    <div class="p-2 bg-stone-300 m-4 text-sm">
       <div class="text-xs bg-stone-100 p-2 m-2">
         Note: Second, filtering attempt, additional fields, string only, extra
-        added it, own state managment was the original issue.
+        added it, own state managment was the original issue. |
+        /tables/filter01/filter03a | Filter03a
       </div>
       <div class="pb-4 m-2">
         <DebouncedInput
@@ -278,161 +279,168 @@ function App() {
           placeholder="Search all columns..."
         />
       </div>
-      <table class="m-2">
-        <thead class="bg-stone-100">
-          <For each={table.getHeaderGroups()}>
-            {(headerGroup) => (
-              <tr>
-                <For each={headerGroup.headers}>
-                  {(column) => (
-                    <th
-                      class="border bg-stone-200 px-8"
-                      // {...column.getHeaderProps()}
-                      colSpan={column.colSpan}
-                    >
-                      {/* {flexRender(
-                        column.column.columnDef.header,
-                        column.getContext()
-                      )} */}
-                      <Show when={!column.isPlaceholder}>
-                        <div>
-                          <div class={getClassValue(column)}></div>
-                        </div>
-
-                        <>
-                          {/* <div
-                            {...{
-                              class: column.column.getCanSort()
-                                ? "cursor-pointer select-none bg-stone-300"
-                                : "",
-                              onClick: column.column.getToggleSortingHandler(),
-                            }}
-                          >
-                            {flexRender(
-                              column.column.columnDef.header,
-                              column.getContext()
-                            )}
-                            {{
-                              asc: " 🔼",
-                              desc: " 🔽",
-                            }[column.column.getIsSorted() as string] ?? null}
-                          </div> */}
-
-                          <div
-                            class={
-                              column.column.getCanSort()
-                                ? "cursor-pointer select-none bg-stone-300"
-                                : ""
-                            }
-                            onClick={() =>
-                              console.log(
-                                column.column.getToggleSortingHandler()
-                              )
-                            }
-                          >
-                            {flexRender(
-                              column.column.columnDef.header,
-                              column.getContext()
-                            )}
-                            <Show when={column.column.getIsSorted() === "asc"}>
-                              🔼
-                            </Show>
-                            <Show when={column.column.getIsSorted() === "desc"}>
-                              🔽
-                            </Show>
+      <div class="w-full-screen overflow-x-scroll">
+        <table class="m-2">
+          <thead class="bg-stone-100">
+            <For each={table.getHeaderGroups()}>
+              {(headerGroup) => (
+                <tr>
+                  <For each={headerGroup.headers}>
+                    {(column) => (
+                      <th
+                        class="border bg-stone-200 px-8"
+                        // {...column.getHeaderProps()}
+                        colSpan={column.colSpan}
+                      >
+                        {/* {flexRender(
+                          column.column.columnDef.header,
+                          column.getContext()
+                        )} */}
+                        <Show when={!column.isPlaceholder}>
+                          <div>
+                            <div class={getClassValue(column)}></div>
                           </div>
 
-                          {column.column.getCanFilter() ? (
-                            <div class="bg-stone-200">
-                              <Filter column={column.column} table={table} />
+                          <>
+                            {/* <div
+                              {...{
+                                class: column.column.getCanSort()
+                                  ? "cursor-pointer select-none bg-stone-300"
+                                  : "",
+                                onClick: column.column.getToggleSortingHandler(),
+                              }}
+                            >
+                              {flexRender(
+                                column.column.columnDef.header,
+                                column.getContext()
+                              )}
+                              {{
+                                asc: " 🔼",
+                                desc: " 🔽",
+                              }[column.column.getIsSorted() as string] ?? null}
+                            </div> */}
+
+                            <div
+                              class={
+                                column.column.getCanSort()
+                                  ? "cursor-pointer select-none bg-stone-300"
+                                  : ""
+                              }
+                              onClick={() =>
+                                console.log(
+                                  column.column.getToggleSortingHandler()
+                                )
+                              }
+                            >
+                              {flexRender(
+                                column.column.columnDef.header,
+                                column.getContext()
+                              )}
+                              <Show
+                                when={column.column.getIsSorted() === "asc"}
+                              >
+                                🔼
+                              </Show>
+                              <Show
+                                when={column.column.getIsSorted() === "desc"}
+                              >
+                                🔽
+                              </Show>
                             </div>
-                          ) : null}
-                        </>
-                      </Show>
-                      {/* {colShow>mn.render("Header")} */}
+
+                            {column.column.getCanFilter() ? (
+                              <div class="bg-stone-200">
+                                <Filter column={column.column} table={table} />
+                              </div>
+                            ) : null}
+                          </>
+                        </Show>
+                        {/* {colShow>mn.render("Header")} */}
+                      </th>
+                    )}
+                  </For>
+                </tr>
+              )}
+              {/* {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </th>
-                  )}
-                </For>
+                  ))}
+                </tr>
+              ))} */}
+            </For>
+          </thead>
+          <tbody>
+            {/* {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
               </tr>
-            )}
-            {/* {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
+            ))} */}
+            <For each={table.getRowModel().rows}>
+              {(row) => (
+                <tr class="bg-stone-50">
+                  <For each={row.getVisibleCells()}>
+                    {(cell) => (
+                      <td>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    )}
+                  </For>
+                </tr>
+              )}
+            </For>
+          </tbody>
+          <tfoot>
+            {/* {table.getFooterGroups().map((footerGroup) => (
+              <tr key={footerGroup.id}>
+                {footerGroup.headers.map((header) => (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
+                          header.column.columnDef.footer,
                           header.getContext()
                         )}
                   </th>
                 ))}
               </tr>
             ))} */}
-          </For>
-        </thead>
-        <tbody>
-          {/* {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))} */}
-          <For each={table.getRowModel().rows}>
-            {(row) => (
-              <tr class="bg-stone-50">
-                <For each={row.getVisibleCells()}>
-                  {(cell) => (
-                    <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  )}
-                </For>
-              </tr>
-            )}
-          </For>
-        </tbody>
-        <tfoot>
-          {/* {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))} */}
-          <For each={table.getFooterGroups()}>
-            {(footerGroup) => (
-              <tr>
-                <For each={footerGroup.headers}>
-                  {(header) => (
-                    <th colSpan={header.colSpan}>
-                      <Show when={!header.isPlaceholder}>
-                        {flexRender(
-                          header.column.columnDef.footer,
-                          header.getContext()
-                        )}
-                      </Show>
-                    </th>
-                  )}
-                </For>
-              </tr>
-            )}
-          </For>
-        </tfoot>
-      </table>
+            <For each={table.getFooterGroups()}>
+              {(footerGroup) => (
+                <tr>
+                  <For each={footerGroup.headers}>
+                    {(header) => (
+                      <th colSpan={header.colSpan}>
+                        <Show when={!header.isPlaceholder}>
+                          {flexRender(
+                            header.column.columnDef.footer,
+                            header.getContext()
+                          )}
+                        </Show>
+                      </th>
+                    )}
+                  </For>
+                </tr>
+              )}
+            </For>
+          </tfoot>
+        </table>
+      </div>
+
       <div class="h-2" />
       <div class="flex items-center gap-2">
         <button

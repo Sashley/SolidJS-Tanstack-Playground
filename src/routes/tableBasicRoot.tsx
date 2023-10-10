@@ -93,8 +93,11 @@ function App() {
   });
 
   return (
-    <div class="p-2 bg-gray-300">
-      <table>
+    <div class="p-2 bg-stone-200">
+      <div class="text-xs bg-stone-100 p-2 m-2">
+        Note: basic table root | basic/tableBasicRoot | TableBasic04
+      </div>
+      <table class="text-sm">
         <thead>
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (

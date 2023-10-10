@@ -114,13 +114,17 @@ function App() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
+    filterFns: undefined,
   });
 
   return (
-    <>
-      <div class="flex p-2 bg-zinc-50">
+    <div class="p-2 bg-stone-200 m-4 text-sm">
+      <div class="text-xs bg-stone-100 p-2 m-2">
+        Note: visibility | /tables/column-visibility/visibility01| Visbility01
+      </div>
+      <div class="flex p-2">
         <div class="flex-col gap-4" />
-        <div class="bg-zinc-300 w-48 p-4 m-4 inline-block border border-black shadow rounded">
+        <div class="bg-stone-300 w-48 p-4 m-4 inline-block border border-black shadow rounded">
           <div class="px-1 border-b border-black">
             <label>
               <input
@@ -152,7 +156,7 @@ function App() {
             <thead>
               <For each={table.getHeaderGroups()}>
                 {(headerGroup) => (
-                  <tr class="px-4 bg-zinc-200">
+                  <tr class="px-4 bg-stone-200">
                     <For each={headerGroup.headers}>
                       {(header) => (
                         <th colSpan={header.colSpan}>
@@ -172,7 +176,7 @@ function App() {
             <tbody>
               <For each={table.getRowModel().rows}>
                 {(row) => (
-                  <tr class="bg-zinc-100">
+                  <tr class="bg-stone-100">
                     <For each={row.getVisibleCells()}>
                       {(cell) => (
                         <td class="px-8">
@@ -212,17 +216,17 @@ function App() {
         <div />
       </div>
 
-      <div class="flex-row bg-zinc-50">
+      <div class="flex-row bg-stone-200">
         <button
           onClick={() => rerender()}
-          class="m-4 p-2 bg-zinc-500 text-slate-50 rounded"
+          class="m-4 p-2 bg-stone-500 text-slate-50 rounded"
         >
           Rerender
         </button>
         <div class="h-4" />
         <pre>{JSON.stringify(table.getState().columnVisibility, null, 2)}</pre>
       </div>
-    </>
+    </div>
   );
 }
 
