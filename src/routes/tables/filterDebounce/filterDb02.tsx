@@ -20,8 +20,6 @@ import {
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { createStore } from "solid-js/store";
 
-// const [filterValue, setFilterValue] = createSignal<string | number>("");
-
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value);
@@ -37,15 +35,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 
 const [columnFilters, setColumnFilters] = createStore<ColumnFiltersState>([]);
 
-function getColumnFilters(): ColumnFiltersState {
-  return columnFilters;
-}
-
 function App() {
-  // const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>(
-  //   []
-  // );
-
   const columns = createMemo<ColumnDef<Person, any>[]>(
     () => [
       {
@@ -179,26 +169,14 @@ function Filter({
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
 
-  // const columnFilterValue = column.getFilterValue() as string | number;
   const [filterValue, setFilterValue] = createSignal<string | number>(
     column.getFilterValue() as string | number
   );
-  // setFilterValue(columnFilterValue);
-
-  // const [filterValue, setFilterValue] = createSignal<string | number>("");
 
   const applyFilter = () => {
     // Apply filtering logic here using filterValue
     // Example: Update the filtered data in the table
-    // console.log("applyFilter");
     column.setFilterValue(filterValue());
-    // console.log(
-    //   "af columnFilterValue: ",
-    //   filterValue(),
-    //   columnFilterValue,
-    //   column.getFilterValue()
-    // );
-    // console.log("af filterValue: ", filterValue());
   };
 
   // Use a custom useEffect to apply filtering when filterValue changes
@@ -237,11 +215,8 @@ function Filter({
       initialValue
     );
 
-    // console.log("initial value: ", initialValue);
-
     createEffect(() => {
-      setDeBounceValue(initialValue); //, [initialValue]
-      // console.log("initialValue ce1: ", initialValue);
+      setDeBounceValue(initialValue);
     });
 
     createEffect(() => {
@@ -249,29 +224,17 @@ function Filter({
         const updatedValue = deBounceValue();
         onChange(updatedValue); // Pass the updated value to the parent component
         setDeBounceValue(updatedValue);
-        // console.log("updatedValue ce2: ", updatedValue);
       }, debounce);
-      console.log("debounced");
 
       return () => clearTimeout(timeout);
-    }); //, [filterValue, onChange, debounce]
-
-    // createEffect(() => {
-    //   setFilterValue(deBounceValue());
-    // });
+    });
 
     return (
       <input
         {...(props as JSX.IntrinsicElements["input"])}
         value={initialValue}
-        // onChange={(e) => {
-        //   setDeBounceValue(e.currentTarget.value);
-        //   console.log("onChange input");
-        // }}
         onInput={(e) => {
-          // setFilterValue(e.currentTarget.value);
           setDeBounceValue(e.currentTarget.value);
-          // console.log("onInput input");
         }}
       />
     );
@@ -291,14 +254,10 @@ function Filter({
         value={filterValue()}
         oninput={(e) => {
           setFilterValue(e.currentTarget.value);
-          // console.log("on db input", filterValue());
           applyFilter();
         }}
         onChange={(value) => {
           setFilterValue(value);
-          // console.log("value db onChange: ", value);
-          // console.log("columnFilterValue: ", columnFilterValue);
-          // console.log("filterValue: ", filterValue());
         }}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
         class="w-36 border shadow rounded"
