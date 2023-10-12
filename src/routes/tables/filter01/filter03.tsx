@@ -281,10 +281,10 @@ function App() {
 
   return (
     <div class="p-2 bg-stone-300 m-4 text-sm">
-      <div class="text-xs bg-stone-100 p-2 m-2">
+      <div class="text-xs bg-stone-100 p-2 m-2 rounded-lg">
         Note: Second, filtering attempt, additional fields, string only, extra
-        added it, own state managment was the original issue. |
-        /tables/filter01/filter03 | Filter03
+        added it, own state managment was the original issue. Input rather than
+        DebouncedInput | /tables/filter01/filter03 | Filter03
       </div>
       <div class="pb-4 m-2">
         <DebouncedInput

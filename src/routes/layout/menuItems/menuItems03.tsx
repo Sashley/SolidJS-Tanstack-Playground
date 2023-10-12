@@ -43,6 +43,16 @@ export default function menuItems() {
     { path: "/tables/filter02/simpleFilter01", title: "SimpleFilter01" },
 
     { path: "/trial/signal01", title: "Signal01", hasSeparator: true },
+
+    {
+      path: "/tables/filterDebounce/filterDb01",
+      title: "FilterDb01 DebouncePlay ex 03d2",
+      hasSeparator: true,
+    },
+    {
+      path: "/tables/filterDebounce/filterDb02",
+      title: "FilterDb02",
+    },
   ];
 
   return (

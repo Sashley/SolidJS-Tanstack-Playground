@@ -28,9 +28,10 @@ export default function menuItems() {
     { path: "/tables/filter01/filter03a", title: "Filter03a" },
     { path: "/tables/filter01/filter03d", title: "Filter03d", hasSeparator: true },
     { path: "/trial/signal01", title: "Signal01" },
-    { path: "/tables/filter01/filter03d", title: "Signal01" },
-    { path: "/tables/filter01/filter03d", title: "Filter03d1" },
-    { path: "/tables/filter01/filter03d", title: "Filter03d2" },
+    // { path: "/tables/filter01/filter03d", title: "Signal01" },
+    { path: "/tables/filter01/filter03d1", title: "Filter03d1" },
+    { path: "/tables/filter01/filter03d2", title: "Filter03d2" },
+    { path: "/tables/filterDebounce/filter03d2", title: "Filter03d2 debouncePlay" },
     { path: "/tables/filter01/filter03d", title: "Filter03d" },
     { path: "/tables/filter01/filter03d", title: "Filter03d" },
   ];

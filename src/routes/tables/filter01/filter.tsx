@@ -203,7 +203,8 @@ function App() {
   return (
     <div class="p-2 bg-stone-200 text-sm m-4">
       <div class="text-xs bg-stone-100 p-2 m-2">
-        Note: First, basic filtering attempt, string only
+        Note: First, basic filtering attempt, string only. Input vs
+        DebouncedInput method | /tables/filter01/filter | Filter
       </div>
       <table>
         <thead class="bg-stone-100">
@@ -259,11 +260,11 @@ function App() {
       <div class="h-4" />
       <button
         onClick={() => refreshData()}
-        class="border p-2 bg-stone-200 rounded"
+        class="border p-2 bg-stone-300 rounded"
       >
-        Rerender 1
+        ReRender
       </button>
-      <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
+      <pre class="text-xs m-2">{JSON.stringify(table.getState(), null, 2)}</pre>
     </div>
   );
 }

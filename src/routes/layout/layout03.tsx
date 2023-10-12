@@ -49,7 +49,7 @@ export default function Layout() {
 
         {/* Main Content Area */}
         {/* <div class={`border-b ${mainContentMargin} flex-grow p-4 overflow-y-auto`}> */}
-        <div class={`border-b flex-grow overflow-y-auto`}>
+        <div class={`border-b flex-grow h-screen overflow-y-auto`}>
           <Routes>
             <FileRoutes />
           </Routes>

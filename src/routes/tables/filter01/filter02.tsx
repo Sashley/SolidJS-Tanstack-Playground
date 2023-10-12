@@ -203,7 +203,8 @@ function App() {
   return (
     <div class="p-2  bg-stone-300 m-4 text-sm">
       <div class="text-xs bg-stone-100 p-2 m-2">
-        Note: Filter02 | /tables/filter01/filter02 | Filter02
+        Note: Filter02. Input rather than DebouncedInput |
+        /tables/filter01/filter02 | Filter02
       </div>
       <table>
         <thead class="bg-stone-100">
