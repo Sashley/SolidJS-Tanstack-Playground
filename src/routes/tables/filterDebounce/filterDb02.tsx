@@ -177,10 +177,18 @@ function Filter({
     // Apply filtering logic here using filterValue
     // Example: Update the filtered data in the table
     column.setFilterValue(filterValue());
+    console.log(
+      "apply filter",
+      filterValue(),
+      column.getFilterValue(),
+      column.getIsFiltered(),
+      column.getFilterFn()
+    );
   };
 
   // Use a custom useEffect to apply filtering when filterValue changes
   createEffect(() => {
+    console.log("2.1");
     console.log("trigger apply filter", filterValue());
     applyFilter();
   });
@@ -203,27 +211,66 @@ function Filter({
     value: T;
     onChange: (value: T) => void;
     debounce?: number;
-  } & Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "onChange">;
+  } & Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "onInput">;
+
+  // function DebouncedInput({
+  //   value: initialValue,
+  //   onChange,
+  //   debounce = 1000,
+  //   ...props
+  // }: DebouncedInputProps<string | number>) {
+  //   const [deBounceValue, setDeBounceValue] = createSignal<string | number>(
+  //     initialValue
+  //   );
+
+  //   // createEffect(() => {
+  //   //   console.log("1.1");
+  //   //   setDeBounceValue(initialValue);
+  //   // });
+
+  //   createEffect(() => {
+  //     console.log("1.2");
+  //     const timeout = setTimeout(() => {
+  //       const updatedValue = deBounceValue();
+  //       onChange(updatedValue); // Pass the updated value to the parent component
+  //       setDeBounceValue(updatedValue);
+  //     }, debounce);
+
+  //     return () => clearTimeout(timeout);
+  //   });
+
+  //   return (
+  //     <input
+  //       {...(props as JSX.IntrinsicElements["input"])}
+  //       value={initialValue}
+  //       // onInput={(e) => {
+  //       //   setDeBounceValue(e.currentTarget.value);
+  //       // }}
+  //     />
+  //   );
+  // }
 
   function DebouncedInput({
-    value: initialValue,
+    value: externalValue,
     onChange,
-    debounce = 1000,
+    debounce = 500,
     ...props
   }: DebouncedInputProps<string | number>) {
-    const [deBounceValue, setDeBounceValue] = createSignal<string | number>(
-      initialValue
+    const [immediateValue, setImmediateValue] = createSignal<string | number>(
+      externalValue
+    );
+    const [debouncedValue, setDebouncedValue] = createSignal<string | number>(
+      externalValue
     );
 
     createEffect(() => {
-      setDeBounceValue(initialValue);
-    });
-
-    createEffect(() => {
+      console.log("createEffect 1.1");
       const timeout = setTimeout(() => {
-        const updatedValue = deBounceValue();
-        onChange(updatedValue); // Pass the updated value to the parent component
-        setDeBounceValue(updatedValue);
+        const currentImmediateValue = immediateValue();
+        if (currentImmediateValue !== debouncedValue()) {
+          setDebouncedValue(currentImmediateValue);
+          onChange(currentImmediateValue);
+        }
       }, debounce);
 
       return () => clearTimeout(timeout);
@@ -232,9 +279,9 @@ function Filter({
     return (
       <input
         {...(props as JSX.IntrinsicElements["input"])}
-        value={initialValue}
+        value={immediateValue()}
         onInput={(e) => {
-          setDeBounceValue(e.currentTarget.value);
+          setImmediateValue(e.currentTarget.value);
         }}
       />
     );
@@ -252,11 +299,11 @@ function Filter({
       <DebouncedInput
         type="text"
         value={filterValue()}
-        oninput={(e) => {
-          setFilterValue(e.currentTarget.value);
-          applyFilter();
-        }}
-        onChange={(value) => {
+        // oninput={(e) => {
+        //   setFilterValue(e.currentTarget.value);
+        //   // applyFilter();
+        // }}
+        onChange={(value: any) => {
           setFilterValue(value);
         }}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
