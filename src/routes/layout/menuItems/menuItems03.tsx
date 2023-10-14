@@ -53,6 +53,14 @@ export default function menuItems() {
       path: "/tables/filterDebounce/filterDb02",
       title: "FilterDb02",
     },
+    {
+      path: "/tables/filterDebounce/simpleDebounceTest",
+      title: "SimpleDebounceTest",
+    },
+    {
+      path: "/tables/filterDebounce/filterDb03",
+      title: "FilterDb03",
+    },
   ];
 
   return (

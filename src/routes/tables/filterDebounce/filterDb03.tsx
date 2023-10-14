@@ -33,9 +33,12 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-const [columnFilters, setColumnFilters] = createStore<ColumnFiltersState>([]);
-
 function App() {
+  const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>(
+    []
+  );
+  const [globalFilter, setGlobalFilter] = createSignal("");
+
   const columns = createMemo<ColumnDef<Person, any>[]>(
     () => [
       {
@@ -73,10 +76,23 @@ function App() {
       fuzzy: fuzzyFilter,
     },
 
+    // state: {
+    //   columnFilters,
+    // },
+
     state: {
-      columnFilters,
+      get columnFilters() {
+        return columnFilters();
+      },
+      // columnFilters: columnFilters(), //??
+      get globalFilter() {
+        return globalFilter();
+      },
     },
+
     onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
@@ -97,9 +113,9 @@ function App() {
 
   return (
     <div class="p-2 bg-stone-300 m-4 text-sm h-fit overflow-auto">
-      <div class="text-xs bg-stone-100 p-2 m-2 rounded-lg">
-        Note: DeBounce 2nd attempt, nested debounce inside filter. Using signals
-        | /tables/filterDebounce/filterDb02 | FilterDb02
+      <div class="text-sm bg-stone-100 p-2 m-2 rounded-lg">
+        Note: DeBounce 3nd attempt, seems to be working, nested debounce inside
+        filter. Using signals | /tables/filterDebounce/filterDb03 | FilterDb03
       </div>
       <div class="w-full-screen overflow-x-scroll">
         <table class="m-2 text-sm">
@@ -177,13 +193,14 @@ function Filter({
     // Apply filtering logic here using filterValue
     // Example: Update the filtered data in the table
     column.setFilterValue(filterValue());
-    console.log(
-      "apply filter",
-      filterValue(),
-      column.getFilterValue(),
-      column.getIsFiltered(),
-      column.getFilterFn()
-    );
+    // console.log(
+    //   "apply filter",
+    //   filterValue(),
+    //   column.getFilterValue(),
+    //   column.getIsFiltered(),
+    //   column.getFilterFn()
+    // );
+    console.log("2.2");
   };
 
   // Use a custom useEffect to apply filtering when filterValue changes
@@ -200,6 +217,7 @@ function Filter({
     );
     // uniqueValues;
     Array.from(column.getFacetedUniqueValues().keys()).sort();
+    console.log("2.3");
   };
 
   const sortedUniqueValues = createMemo(
@@ -214,23 +232,23 @@ function Filter({
   } & Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "onInput">;
 
   function DebouncedInput({
-    value: externalValue,
+    value,
     onChange,
     debounce = 500,
     ...props
   }: DebouncedInputProps<string | number>) {
     const [immediateValue, setImmediateValue] = createSignal<string | number>(
-      externalValue
+      value
     );
     const [debouncedValue, setDebouncedValue] = createSignal<string | number>(
-      externalValue
+      value
     );
 
     createEffect(() => {
       console.log("createEffect 1.1");
       // console.log("Effect started");
+      const currentImmediateValue = immediateValue();
       const timeout = setTimeout(() => {
-        const currentImmediateValue = immediateValue();
         if (currentImmediateValue !== debouncedValue()) {
           setDebouncedValue(currentImmediateValue);
           onChange(currentImmediateValue);
