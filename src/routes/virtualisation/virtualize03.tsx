@@ -12,21 +12,16 @@ function App() {
         every element's dimensions are hard-coded to the same value and never
         change.
       </p>
-      <br />
-      <br />
 
-      <h3>Rows</h3>
+      <h3 class="py-4 font-semibold">Rows</h3>
       <RowVirtualizerFixed />
-      <br />
-      <br />
-      <h3>Columns</h3>
+
+      <h3 class="py-4 font-semibold">Columns</h3>
       <ColumnVirtualizerFixed />
-      <br />
-      <br />
-      <h3>Grid</h3>
+
+      <h3 class="py-4 font-semibold">Grid</h3>
       <GridVirtualizerFixed />
-      <br />
-      <br />
+
       {import.meta.env.MODE === "development" ? (
         <p>
           <strong>Notice:</strong> You are currently running Solid in
@@ -54,23 +49,12 @@ function RowVirtualizerFixed() {
         class="relative w-full max-h-96"
         style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
       >
-        {/* {rowVirtualizer.getVirtualItems().map((virtualRow) => (
-          <div
-            key={virtualRow.index}
-            class={`absolute top-0 left-0 w-full h-${virtualRow.size} ${virtualRow.index % 2 ? 'ListItemOdd' : 'ListItemEven'}`}
-            style={{ transform: `translateY(${virtualRow.start}px)` }}
-          >
-            Row {virtualRow.index}
-          </div>
-        ))} */}
-
         <For
           each={rowVirtualizer.getVirtualItems()}
           fallback={<div>Loading...</div>}
         >
           {(virtualRow) => (
             <div
-              // key={virtualRow.index}
               class={`absolute top-0 left-0 w-full h-${virtualRow.size} ${
                 virtualRow.index % 2 ? "ListItemOdd" : "ListItemEven"
               }`}
@@ -84,9 +68,6 @@ function RowVirtualizerFixed() {
     </div>
   );
 }
-
-// import { createSignal } from "solid-js";
-// import { useVirtualizer } from "@tanstack/solid-virtual";
 
 function ColumnVirtualizerFixed() {
   const [parentRef, setParentRef] = createSignal(null);
@@ -120,7 +101,6 @@ function ColumnVirtualizerFixed() {
           <For each={columnVirtualizer.getVirtualItems()}>
             {(virtualColumn) => (
               <div
-                // key={virtualColumn.index}
                 class={virtualColumn.index % 2 ? "ListItemOdd" : "ListItemEven"}
                 style={{
                   position: "absolute",
@@ -140,9 +120,6 @@ function ColumnVirtualizerFixed() {
     </>
   );
 }
-
-// import { createSignal } from "solid-js";
-// import { useVirtualizer } from "@tanstack/solid-virtual";
 
 function GridVirtualizerFixed() {
   const [parentRef, setParentRef] = createSignal(null);
@@ -186,7 +163,6 @@ function GridVirtualizerFixed() {
                 <For each={columnVirtualizer.getVirtualItems()}>
                   {(virtualColumn) => (
                     <div
-                      // key={virtualColumn.index}
                       class={
                         virtualColumn.index % 2
                           ? virtualRow.index % 2 === 0
@@ -217,9 +193,5 @@ function GridVirtualizerFixed() {
     </>
   );
 }
-
-// ... (repeat the conversion for the ColumnVirtualizerFixed and GridVirtualizerFixed)
-
-// render(() => <App />, document.getElementById("root"));
 
 export default App;
