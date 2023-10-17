@@ -108,10 +108,10 @@ function App() {
   return (
     <div class="p-2 bg-stone-300 m-4 text-sm h-fit overflow-auto">
       <div class="text-sm bg-stone-100 p-2 m-2 rounded-lg">
-        Note: DeBounce 3nd attempt, seems to be working, nested debounce inside
-        filter. Using signals | /tables/filterDebounce/filterDb03 | FilterDb03
+        Note: DeBounce OK, larger scroll | /tables/filterDebounce/filterDb04 |
+        FilterDb04
       </div>
-      <div class="w-full-screen overflow-y-scroll h-96">
+      <div class="w-full-screen overflow-x-scroll">
         <table class="m-2 text-sm">
           <thead class="bg-stone-100 rounded-lg">
             <For each={table.getHeaderGroups()}>
@@ -143,13 +143,13 @@ function App() {
               )}
             </For>
           </thead>
-          <tbody class="max-h-96">
+          <tbody class="">
             <For each={table.getRowModel().rows}>
               {(row) => (
                 <tr class="bg-stone-50">
                   <For each={row.getVisibleCells()}>
                     {(cell) => (
-                      <td class="">
+                      <td class="w-1/4">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()

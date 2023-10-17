@@ -61,6 +61,23 @@ export default function menuItems() {
       path: "/tables/filterDebounce/filterDb03",
       title: "FilterDb03",
     },
+    {
+      path: "/tables/filterDebounce/filterDb04",
+      title: "FilterDb04",
+    },
+    {
+      path: "/tables/filterDebounce/filterDb05",
+      title: "FilterDb05",
+    },
+    {
+      path: "/virtualisation/virtualize02",
+      title: "Virtualize02",
+      hasSeparator: true,
+    },
+    {
+      path: "/virtualisation/virtualize03",
+      title: "Virtualize03",
+    },
   ];
 
   return (
