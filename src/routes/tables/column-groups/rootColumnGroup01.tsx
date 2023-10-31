@@ -107,12 +107,12 @@ function App() {
   });
 
   return (
-    <div class="p-2 bg-stone-300 m-4 text-sm">
+    <div class="p-2 m-4 text-sm">
       <div class="text-xs bg-stone-100 p-2 m-2">
         Note: basic column table | /tables/column-groups/rootColumnGroup01 |
         ColumnGroup01
       </div>
-      <table class="p-12 bg-stone-200">
+      <table class="m-2 p-12 bg-stone-200">
         <thead class="p-4 h-50">
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (
@@ -173,7 +173,7 @@ function App() {
         </tfoot>
       </table>
       <div class="h-4" />
-      <button onClick={() => rerender()} class="border p-2">
+      <button onClick={() => rerender()} class="border mx-2 p-2">
         Rerender
       </button>
     </div>

@@ -106,7 +106,7 @@ function App() {
   }, [table.getState().columnFilters[0]?.id]);
 
   return (
-    <div class="p-2 bg-stone-300 m-4 text-sm h-fit overflow-auto">
+    <div class="p-4 bg-stone-300 text-sm h-fit overflow-auto">
       <div class="text-sm bg-stone-100 p-2 m-2 rounded-lg">
         Note: DeBounce OK, larger scroll | /tables/filterDebounce/filterDb04 |
         FilterDb04

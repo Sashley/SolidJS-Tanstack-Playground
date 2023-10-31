@@ -13,12 +13,11 @@ export default function Layout() {
   const mainContentMargin = isMenubarOpen() ? "ml-64" : "ml-0";
 
   return (
-    <div class="h-screen flex flex-col overflow-y-hidden">
-      {/* <div class="flex flex-col w-screen"> */}
+    <div class="flex flex-col h-screen">
       <div class="bg-stone-900 sticky top-0 z-40 h-12">
         <nav class="flex items-center justify-between text-stone-200">
           {/* Hamburger Icon for smaller screens */}
-          <div class="p-2">
+          <div class="p-4">
             <button onClick={() => setIsMenubarOpen(!isMenubarOpen())}>
               <div class="px-2 text-xs rounded-sm font-semibold text-stone-100 hover:text-lg">
                 Menu
@@ -26,30 +25,37 @@ export default function Layout() {
             </button>
           </div>
           <div class="pr-8 font-bold">TanStack Table | SolidJs</div>
-
-          {/* <MenuItems /> */}
         </nav>
       </div>
-      <div class="flex flex-grow">
+      <div class="flex flex-grow max-h-[calc(100%-3rem)]">
         {/* Menubar */}
         <div
-          class={`xl:w-64 min-w-[16rem] bg-stone-800 ${
+          class={`xl:w-80 min-w-[16rem] ${
             isMenubarOpen() ? "flex" : "hidden"
-          } 2xl:flex`}
+          } 2xl:flex flex-col`}
         >
-          <div class="px-2">
+          {/* Menu Header */}
+          <div class="p-4 bg-stone-900 ">
+            <h1 class="font-thin text-md text-stone-400">Menu Header</h1>
+          </div>
+
+          {/* Menu Content */}
+          <div class="flex-grow overflow-y-auto max-h-[calc(100%-7rem)] bg-stone-800">
             <div class="py-4 rounded-lg text-stone-100">
-              {/* Menubar Content */}
-              <div class="flex flex-col text-sm max-h-screen overflow-y-scroll m-4">
+              <div class="flex flex-col text-sm">
                 <MenuItems />
               </div>
             </div>
           </div>
+
+          {/* Menu Footer */}
+          <div class="p-4 bg-stone-900 ">
+            <h1 class="font-thin text-md text-stone-400">Menu Footer</h1>
+          </div>
         </div>
 
         {/* Main Content Area */}
-        {/* <div class={`border-b ${mainContentMargin} flex-grow p-4 overflow-y-auto`}> */}
-        <div class={`border-b flex-grow h-screen overflow-y-auto`}>
+        <div class={`flex-grow overflow-y-auto`}>
           <Routes>
             <FileRoutes />
           </Routes>

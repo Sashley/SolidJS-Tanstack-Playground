@@ -6,7 +6,7 @@ import "./index.css"; // Assuming this CSS file contains the necessary styles fo
 
 function App() {
   return (
-    <div class="m-4 px-16">
+    <div class="m-4 px-4">
       <p>
         These components are using <strong>fixed</strong> sizes. This means that
         every element's dimensions are hard-coded to the same value and never
