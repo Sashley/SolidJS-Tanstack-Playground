@@ -78,6 +78,11 @@ export default function menuItems() {
       path: "/virtualisation/virtualize03",
       title: "Virtualize03",
     },
+    {
+      path: "/tables/virtualized-rows/main",
+      title: "Virtualized Rows 01",
+      hasSeparator: true,
+    },
   ];
 
   return (
