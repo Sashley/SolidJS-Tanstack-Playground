@@ -86,10 +86,8 @@ function App() {
   });
 
   const tableContainerRef = createSignal<HTMLDivElement>();
-
   const { rows } = table.getRowModel();
 
-  // let tableContainerRef: any;
   let parentRef: any;
   const rowVirtualizer = createVirtualizer({
     count,
@@ -97,9 +95,7 @@ function App() {
     estimateSize: () => 45,
   });
 
-  // const { virtualItems: virtualRows, totalSize} = rowVirtualizer
-
-  const [virtualRows, setVirtualRows] = createSignal();
+  const [virtualRows, setVirtualRows] = createSignal<VirtualItem[]>([]);
   const [totalSize, setTotalSize] = createSignal(0);
   const [virtualItems, setVirtualItems] = createSignal<VirtualItem[]>([]);
   const [virtualItemsLength, setVirtualItemsLength] = createSignal(0);
@@ -108,41 +104,23 @@ function App() {
   const [paddingBottom, setPaddingBottom] = createSignal(0);
 
   createEffect(() => {
-    // const virtualRows = rowVirtualizer.getVirtualItems();
     setVirtualRows(rowVirtualizer.getVirtualItems());
     setTotalSize(rowVirtualizer.getTotalSize());
     setVirtualItems(rowVirtualizer.getVirtualItems());
     setVirtualItemsLength(rowVirtualizer.getVirtualItems().length);
     setVirtualItemsStart(rowVirtualizer.getVirtualItems()[0]?.start || 0);
-    // const totalSize = rowVirtualizer.getTotalSize();
-    // const virtualItems = rowVirtualizer.getVirtualItems();
-    // const virtualItemsLength = virtualItems.length;
-    // const virtualItemsStart = virtualItems[0]?.start || 0;
-    // Now, virtualRows and totalSize can be used inside this effect as needed
-    // console.log(virtualRows, totalSize);
-
-    // const paddingTop = () =>
-    //   virtualItemsLength() > 0
-    //     ? virtualItemsStart() || 0
-    //     : 0;
 
     setPaddingTop(() =>
       virtualItemsLength() > 0 ? virtualItemsStart() || 0 : 0
     );
-
-    // const paddingBottom = () =>
-    //   virtualItemsLength() > 0
-    //     ? totalSize() -
-    //       (virtualItems()[virtualItemsLength() - 1]?.end ||
-    //         0)
-    //     : 0;
-    // });
 
     setPaddingBottom(() =>
       virtualItemsLength() > 0
         ? totalSize() - (virtualItems()[virtualItemsLength() - 1]?.end || 0)
         : 0
     );
+
+    let parentRef: HTMLDivElement | undefined;
 
     // createEffect(() => {
     //   table.refetch();
@@ -155,77 +133,8 @@ function App() {
 
   return (
     <div class="p-8">
-      {/* ... (same as your React component's JSX, but using SolidJS syntax and APIs) */}
       <div class="h-2" />
-      <div class="container">
-        {" "}
-        {/* /ref={tableContainerRef} */}
-        {/* <table>
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
-                  return (
-                    <th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      style={{ width: header.getSize() }}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          {...{
-                            class: header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : '',
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {{
-                            asc: ' 🔼',
-                            desc: ' 🔽',
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </div>
-                      )}
-                    </th>
-                  )
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {paddingTop() > 0 && (
-              <tr>
-                <td style={{ height: `${paddingTop}px` }} />
-              </tr>
-            )}
-            {virtualRows.map(virtualRow => {
-              const row = rows[virtualRow.index] as Row<Person>
-              return (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => {
-                    return (
-                      <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )
-            })}
-            {paddingBottom() > 0 && (
-              <tr>
-                <td style={{ height: `${paddingBottom}px` }} />
-              </tr>
-            )}
-          </tbody>
-        </table> */}
+      <div ref={parentRef} class="container">
         <table>
           <thead>
             <For each={table.getHeaderGroups()}>
@@ -234,7 +143,6 @@ function App() {
                   <For each={headerGroup.headers}>
                     {(header) => (
                       <th
-                        // key={header.id}
                         colSpan={header.colSpan}
                         style={{ width: `${header.getSize()}px` }}
                       >
@@ -269,10 +177,9 @@ function App() {
                 <td style={{ height: `${paddingTop()}px` }} />
               </tr>
             )}
-            {/* {paddingTop()} {paddingBottom()} */}
-            <For each={virtualRows() as Person[]}>
+            <For each={virtualRows()}>
               {(virtualRow) => {
-                const row = rows[virtualRow.id] as Row<Person>;
+                const row = rows[virtualRow.index] as Row<Person>;
                 return (
                   <tr>
                     <For each={row.getVisibleCells()}>
@@ -298,7 +205,6 @@ function App() {
         </table>
       </div>
       <div>{table.getRowModel().rows.length} Rows</div>
-      {/* <div>{table.getRowModel().rowsById[12]} First Row</div> */}
       <div>
         <button
           class="p-2 m-2 bg-stone-200 rounded-lg"
@@ -317,10 +223,3 @@ function App() {
 }
 
 export default App;
-
-// import { render } from 'solid-js/web';
-
-// const rootElement = document.getElementById('root');
-// if (!rootElement) throw new Error('Failed to find the root element');
-
-// render(() => <App />, rootElement);
