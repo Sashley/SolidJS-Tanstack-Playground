@@ -80,8 +80,16 @@ export default function menuItems() {
     },
     {
       path: "/tables/virtualized-rows/main",
-      title: "Virtualized Rows 01",
+      title: "Virtualized Rows Base",
       hasSeparator: true,
+    },
+    {
+      path: "/tables/virtualized-rows/vSort01",
+      title: "Virtualized Rows 01",
+    },
+    {
+      path: "/tables/virtualized-rows/vSort02",
+      title: "Virtualized Rows 02",
     },
   ];
 

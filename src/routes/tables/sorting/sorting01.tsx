@@ -1,3 +1,4 @@
+import { createSignal, For, Show } from "solid-js";
 import {
   flexRender,
   getCoreRowModel,
@@ -8,7 +9,6 @@ import {
   createSolidTable,
 } from "@tanstack/solid-table";
 import { makeData, Person } from "./makeData";
-import { createSignal, For, Show } from "solid-js";
 
 function App() {
   const [data, setData] = createSignal(makeData(100_000));

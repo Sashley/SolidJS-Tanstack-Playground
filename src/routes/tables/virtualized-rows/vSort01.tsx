@@ -28,111 +28,58 @@ function App() {
   const [sorting, setSorting] = createSignal<SortingState>([]);
   const refreshData = () => setData(makeData(count));
 
-  // const columns = createMemo<ColumnDef<Person, any>[]>(
-  //   () => [
-  //     {
-  //       accessorKey: "id",
-  //       header: "ID",
-  //       size: 60,
-  //     },
-  //     {
-  //       accessorKey: "firstName",
-  //       cell: (info) => info.getValue(),
-  //       header: () => <span>First Name</span>,
-  //     },
-  //     {
-  //       accessorFn: (row) => row.lastName,
-  //       id: "lastName",
-  //       cell: (info) => info.getValue(),
-  //       header: () => <span>Last Name</span>,
-  //     },
-  //     {
-  //       accessorKey: "age",
-  //       header: () => "Age",
-  //       size: 50,
-  //     },
-  //     {
-  //       accessorKey: "visits",
-  //       header: () => <span>Visits</span>,
-  //       size: 50,
-  //     },
-  //     {
-  //       accessorKey: "status",
-  //       header: "Status",
-  //     },
-  //     {
-  //       accessorKey: "progress",
-  //       header: "Profile Progress",
-  //       size: 80,
-  //     },
-  //     {
-  //       accessorKey: "createdAt",
-  //       header: "Created At",
-  //       cell: (info) => info.getValue<Date>().toLocaleString(),
-  //     },
-  //   ],
-  //   []
-  // );
-
-  const columns: ColumnDef<Person>[] = [
-    {
-      header: "Name",
-      footer: (props) => props.column.id,
-      columns: [
-        {
-          accessorKey: "firstName",
-          cell: (info) => info.getValue(),
-          header: () => <span>First Name</span>,
-          footer: (props) => props.column.id,
-        },
-        {
-          accessorFn: (row) => row.lastName,
-          id: "lastName",
-          cell: (info) => info.getValue(),
-          header: () => <span>Last Name</span>,
-          footer: (props) => props.column.id,
-        },
-      ],
-    },
-    {
-      header: "Info",
-      footer: (props) => props.column.id,
-      columns: [
-        {
-          accessorKey: "age",
-          header: () => "Age",
-          footer: (props) => props.column.id,
-        },
-        {
-          header: "More Info",
-          columns: [
-            {
-              accessorKey: "visits",
-              header: () => <span>Visits</span>,
-              footer: (props) => props.column.id,
-            },
-            {
-              accessorKey: "status",
-              header: "Status",
-              footer: (props) => props.column.id,
-            },
-            {
-              accessorKey: "progress",
-              header: "Profile Progress",
-              footer: (props) => props.column.id,
-            },
-          ],
-        },
-      ],
-    },
-  ];
+  const columns = createMemo<ColumnDef<Person, any>[]>(
+    () => [
+      {
+        accessorKey: "id",
+        header: "ID",
+        size: 60,
+      },
+      {
+        accessorKey: "firstName",
+        cell: (info) => info.getValue(),
+        header: () => <span>First Name</span>,
+      },
+      {
+        accessorFn: (row) => row.lastName,
+        id: "lastName",
+        cell: (info) => info.getValue(),
+        header: () => <span>Last Name</span>,
+      },
+      {
+        accessorKey: "age",
+        header: () => "Age",
+        size: 50,
+      },
+      {
+        accessorKey: "visits",
+        header: () => <span>Visits</span>,
+        size: 50,
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+      },
+      {
+        accessorKey: "progress",
+        header: "Profile Progress",
+        size: 80,
+      },
+      {
+        accessorKey: "createdAt",
+        header: "Created At",
+        cell: (info) => info.getValue<Date>().toLocaleString(),
+      },
+    ],
+    []
+  );
 
   const table = createSolidTable({
     get data() {
       return data();
     },
-    // columns: columns(),
-    columns,
+    columns: columns(),
+    // columns,
     state: {
       // sorting: sorting(),
       get sorting() {
@@ -287,6 +234,7 @@ function App() {
           Refresh Data
         </button>
       </div>
+      Sorting 01 <pre>{JSON.stringify(sorting(), null, 2)}</pre>
     </div>
   );
 }

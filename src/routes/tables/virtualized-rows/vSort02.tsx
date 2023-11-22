@@ -5,9 +5,9 @@ import {
   onCleanup,
   For,
 } from "solid-js";
-import { createStore } from "solid-js/store";
+// import { createStore } from "solid-js/store";
 
-import "./index.css";
+// import "./index.css";
 
 import {
   createSolidTable,
@@ -190,6 +190,7 @@ function App() {
     );
 
     let parentRef: HTMLDivElement | undefined;
+    console.log("sorting", sorting());
 
     // createEffect(() => {
     //   table.refetch();
@@ -199,6 +200,11 @@ function App() {
       // Cleanup code if needed
     });
   });
+
+  interface VirtualItem {
+    [key: string]: any; // This is the index signature
+    // Other properties go here
+  }
 
   return (
     <div class="p-8">
@@ -287,6 +293,28 @@ function App() {
           Refresh Data
         </button>
       </div>
+      Sorting 02{" "}
+      <pre>
+        {JSON.stringify(sorting(), null, 2)}
+        {virtualRows()
+          .slice(0, 5)
+          .map((item: VirtualItem) =>
+            Object.keys(item).map((key) => `${key}: ${item[key]}`)
+          )
+          .join(", ")}
+      </pre>
+      <pre>
+        {virtualRows()
+          .slice(0, 5)
+          .map((virtualRow) => {
+            const row = rows[virtualRow.index] as Row<Person>;
+            return row
+              .getVisibleCells()
+              .map((cell) => cell.getValue())
+              .join(", ");
+          })
+          .join("\n")}
+      </pre>
     </div>
   );
 }
