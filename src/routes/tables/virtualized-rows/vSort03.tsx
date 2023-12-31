@@ -23,7 +23,7 @@ import { makeData, Person } from "./makeData";
 import { createVirtualizer, VirtualItem } from "@tanstack/solid-virtual";
 
 function App() {
-  const count = 5000;
+  const count = 50000;
   const [data, setData] = createSignal(makeData(count));
   const [sorting, setSorting] = createSignal<SortingState>([]);
   const refreshData = () => setData(makeData(count));
@@ -33,12 +33,6 @@ function App() {
       header: "Name",
       footer: (props) => props.column.id,
       columns: [
-        {
-          accessorKey: "id",
-          cell: (info) => info.getValue(),
-          header: () => <span>Id</span>,
-          footer: (props) => props.column.id,
-        },
         {
           accessorKey: "firstName",
           cell: (info) => info.getValue(),
@@ -209,7 +203,7 @@ function App() {
                 <td style={{ height: `${paddingTop()}px` }} />
               </tr>
             )}
-            <For each={table.getSortedRowModel().rows}>
+            <For each={virtualRows()}>
               {(virtualRow) => {
                 const row = rows[virtualRow.index] as Row<Person>;
                 return (
@@ -260,39 +254,11 @@ function App() {
           )
           .join(", ")}
       </pre>
-      <div>Virtual Rows</div>{" "}
       <pre>
         {virtualRows()
           .slice(2, 10)
           .map((virtualRow) => {
             const row = rows[virtualRow.index] as Row<Person>;
-            return row
-              .getVisibleCells()
-              .map((cell) => cell.getValue())
-              .join(", ");
-          })
-          .join("\n")}
-      </pre>
-      <div>Virtual Items </div>{" "}
-      <pre>
-        {virtualItems()
-          .slice(2, 10)
-          .map((virtualItems) => {
-            const row = rows[virtualItems.index] as Row<Person>;
-            return row
-              .getVisibleCells()
-              .map((cell) => cell.getValue())
-              .join(", ");
-          })
-          .join("\n")}
-      </pre>
-      <div>Sorted Row Model </div>{" "}
-      <pre>
-        {table
-          .getSortedRowModel()
-          .rows.slice(2, 10)
-          .map((virtualItems) => {
-            const row = rows[virtualItems.index] as Row<Person>;
             return row
               .getVisibleCells()
               .map((cell) => cell.getValue())

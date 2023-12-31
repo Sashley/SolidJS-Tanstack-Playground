@@ -235,6 +235,7 @@ function App() {
         </button>
       </div>
       Sorting 01 <pre>{JSON.stringify(sorting(), null, 2)}</pre>
+      <pre> mm {JSON.stringify(getSortedRowModel(), null, 2)}</pre>
     </div>
   );
 }

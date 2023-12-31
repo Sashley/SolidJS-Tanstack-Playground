@@ -23,7 +23,7 @@ export default function menuItems() {
       path: "/tables/column-ordering/columnOrdering01",
       title: "ColumnOrdering01",
     },
-    { path: "/tables/column-visibility/visibility01", title: "Visbility01" },
+    { path: "/tables/column-visibility/visibility01", title: "Visibility01" },
     { path: "/tables/sorting/App", title: "Layout Example 02" },
     { path: "/tables/sorting/sorting01", title: "Sorting01" },
 
