@@ -148,8 +148,12 @@ function App() {
   });
 
   return (
-    <div class="p-8">
+    <div class="p-8 pt-4">
       <div class="h-2" />
+      <div class="text-xs bg-orange-100 p-2 m-2">
+        Note: virtual | table | column sorting | vSort01 | Not working, needs
+        table sorting store. Change to resource?
+      </div>
       <div ref={parentRef} class="container">
         <table>
           <thead>
@@ -165,7 +169,7 @@ function App() {
                         {header.isPlaceholder ? null : (
                           <div
                             classList={{
-                              "cursor-pointer select-none bg-red-200":
+                              "cursor-pointer select-none":
                                 header.column.getCanSort(),
                             }}
                             onClick={header.column.getToggleSortingHandler()}
@@ -220,22 +224,29 @@ function App() {
           </tbody>
         </table>
       </div>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
+      <div class="pt-4">
         <button
           class="p-2 m-2 bg-stone-200 rounded-lg"
           onClick={() => setData(data())}
         >
           Force Rerender
         </button>
-      </div>
-      <div>
         <button class="p-2 m-2 bg-stone-200 rounded-lg" onClick={refreshData}>
           Refresh Data
         </button>
+        {table.getRowModel().rows.length} Rows
       </div>
-      Sorting 01 <pre>{JSON.stringify(sorting(), null, 2)}</pre>
-      <pre> mm {JSON.stringify(getSortedRowModel(), null, 2)}</pre>
+      <div class="grid grid-cols-2 pt-4">
+        <div class="col-span-2 font-semibold">Sorting 01</div>
+        <div class="col-span-1">
+          Sorting
+          <pre>{JSON.stringify(sorting(), null, 2)}</pre>
+        </div>
+        <div class="col-span-1">
+          GetSortedRowModel
+          <pre>{JSON.stringify(getSortedRowModel(), null, 2)}</pre>
+        </div>
+      </div>
     </div>
   );
 }

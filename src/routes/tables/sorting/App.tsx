@@ -88,7 +88,7 @@ function App() {
 
   return (
     <div class="p-2 bg-stone-200 m-4 text-sm">
-      <div class="text-xs bg-stone-100 p-2 m-2">
+      <div class="text-xs bg-orange-100 p-2 m-2">
         Note: Layout | /tables/sorting/App | Layout Example 02
       </div>
       <table>

@@ -164,8 +164,11 @@ function App() {
   }
 
   return (
-    <div class="p-8">
+    <div class="p-8 py-4">
       <div class="h-2" />
+      <div class="text-xs bg-stone-100 p-2 m-2">
+        Note: virtual | table | column sorting | vSort02
+      </div>
       <div ref={parentRef} class="container">
         <table>
           <thead>
@@ -181,7 +184,7 @@ function App() {
                         {header.isPlaceholder ? null : (
                           <div
                             classList={{
-                              "cursor-pointer select-none bg-red-200":
+                              "cursor-pointer select-none":
                                 header.column.getCanSort(),
                             }}
                             onClick={header.column.getToggleSortingHandler()}
@@ -236,70 +239,82 @@ function App() {
           </tbody>
         </table>
       </div>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
-        <button
-          class="p-2 m-2 bg-stone-200 rounded-lg"
-          onClick={() => setData(data())}
-        >
-          Force Rerender
-        </button>
+      <div class="grid grid-cols-3">
+        <div class="col-span-3 pt-4">
+          <button
+            class="p-2 m-2 bg-stone-200 rounded-lg"
+            onClick={() => setData(data())}
+          >
+            Force Rerender
+          </button>
+          <button class="p-2 m-2 bg-stone-200 rounded-lg" onClick={refreshData}>
+            Refresh Data
+          </button>
+          <div class="pt-4 font-semibold">Metrics</div>
+          <div class="pb-4">{table.getRowModel().rows.length} Rows</div>
+        </div>
+        {/* <div class="col-span-1">{table.getRowModel().rows.length} Rows</div> */}
+        {/* <div class="grid-span-1">
+        </div> */}
+        <div class="col-span-1">
+          <div>Sorting 02</div>{" "}
+          <pre class="text-sm">
+            {JSON.stringify(sorting(), null, 2)}
+            {virtualRows()
+              .slice(0, 5)
+              .map((item: VirtualItem) =>
+                Object.keys(item).map((key) => `${key}: ${item[key]}`)
+              )
+              .join(", \n")}
+          </pre>
+        </div>
+        <div class="col-span-1">
+          <div>Virtual Rows</div>
+          <pre class="text-sm">
+            {virtualRows()
+              .slice(2, 10)
+              .map((virtualRow) => {
+                const row = rows[virtualRow.index] as Row<Person>;
+                return row
+                  .getVisibleCells()
+                  .map((cell) => cell.getValue())
+                  .join(", ");
+              })
+              .join("\n")}
+          </pre>
+        </div>
+        <div class="col-span-1">
+          <div>Virtual Items</div>
+          <pre class="text-sm">
+            {virtualItems()
+              .slice(2, 10)
+              .map((virtualItems) => {
+                const row = rows[virtualItems.index] as Row<Person>;
+                return row
+                  .getVisibleCells()
+                  .map((cell) => cell.getValue())
+                  .join(", ");
+              })
+              .join("\n")}
+          </pre>
+        </div>
+        <div class="col-span-1">
+          <div>Sorted Row Model </div>{" "}
+          <pre class="text-sm">
+            {table
+              .getSortedRowModel()
+              .rows.slice(2, 10)
+              .map((virtualItems) => {
+                const row = rows[virtualItems.index] as Row<Person>;
+                return row
+                  .getVisibleCells()
+                  .map((cell) => cell.getValue())
+                  .join(", ");
+              })
+              .join("\n")}
+          </pre>
+        </div>
       </div>
-      <div>
-        <button class="p-2 m-2 bg-stone-200 rounded-lg" onClick={refreshData}>
-          Refresh Data
-        </button>
-      </div>
-      Sorting 02{" "}
-      <pre>
-        {JSON.stringify(sorting(), null, 2)}
-        {virtualRows()
-          .slice(0, 5)
-          .map((item: VirtualItem) =>
-            Object.keys(item).map((key) => `${key}: ${item[key]}`)
-          )
-          .join(", ")}
-      </pre>
-      <div>Virtual Rows</div>{" "}
-      <pre>
-        {virtualRows()
-          .slice(2, 10)
-          .map((virtualRow) => {
-            const row = rows[virtualRow.index] as Row<Person>;
-            return row
-              .getVisibleCells()
-              .map((cell) => cell.getValue())
-              .join(", ");
-          })
-          .join("\n")}
-      </pre>
-      <div>Virtual Items </div>{" "}
-      <pre>
-        {virtualItems()
-          .slice(2, 10)
-          .map((virtualItems) => {
-            const row = rows[virtualItems.index] as Row<Person>;
-            return row
-              .getVisibleCells()
-              .map((cell) => cell.getValue())
-              .join(", ");
-          })
-          .join("\n")}
-      </pre>
-      <div>Sorted Row Model </div>{" "}
-      <pre>
-        {table
-          .getSortedRowModel()
-          .rows.slice(2, 10)
-          .map((virtualItems) => {
-            const row = rows[virtualItems.index] as Row<Person>;
-            return row
-              .getVisibleCells()
-              .map((cell) => cell.getValue())
-              .join(", ");
-          })
-          .join("\n")}
-      </pre>
     </div>
   );
 }

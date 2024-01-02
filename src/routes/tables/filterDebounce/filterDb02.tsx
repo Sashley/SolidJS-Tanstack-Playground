@@ -97,7 +97,7 @@ function App() {
 
   return (
     <div class="p-2 bg-stone-300 m-4 text-sm h-fit overflow-auto">
-      <div class="text-xs bg-stone-100 p-2 m-2 rounded-lg">
+      <div class="text-xs bg-orange-100 p-2 m-2 rounded-lg">
         Note: DeBounce 2nd attempt, nested debounce inside filter. Using signals
         | /tables/filterDebounce/filterDb02 | FilterDb02
       </div>

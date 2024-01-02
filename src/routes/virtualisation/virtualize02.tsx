@@ -251,8 +251,8 @@ function SolidTableVirtualized() {
 
 function App() {
   return (
-    <div class="bg-stone-100 m-2 text-sm">
-      <p>
+    <div class="m-2 text-sm">
+      <p class="bg-orange-100">
         For tables, the basis for the offset of the translate css function is
         from the row's initial position itself. Because of this, we need to
         calculate the translateY pixel count different and base it off the the

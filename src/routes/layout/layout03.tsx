@@ -11,6 +11,7 @@ export default function Layout() {
       ? "border-stone-700"
       : "border-transparent hover:border-stone-800";
   const mainContentMargin = isMenubarOpen() ? "ml-64" : "ml-0";
+  // const [visibility, setVisibility] = createSignal("hidden");
 
   return (
     <div class="flex flex-col h-screen">
@@ -35,8 +36,23 @@ export default function Layout() {
           } 2xl:flex flex-col`}
         >
           {/* Menu Header */}
+
+          {/* <style>
+            .p-4:hover + .text-sm {
+              visibility: visible;
+            }
+
+            .text-sm {
+              visibility: hidden;
+            }
+          </style> */}
+
           <div class="p-4 bg-stone-900 ">
             <h1 class="font-thin text-md text-stone-400">Menu Header</h1>
+            <div class="text-xs hover:text-md text-orange-500 hover:bg-stone-100 hover:font-bold hover:p-2 rounded-md">
+              <div>strikethrough -</div>
+              WIP or Rework required
+            </div>
           </div>
 
           {/* Menu Content */}

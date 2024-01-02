@@ -40,7 +40,7 @@ export default function Layout() {
           <div class="px-2">
             <div class="py-4 rounded-lg text-stone-100">
               {/* Menubar Content */}
-              <div class="flex flex-col text-xs">
+              <div class="flex flex-col text-xs"> ffssffsffs
                 <MenuItems />
               </div>
             </div>
